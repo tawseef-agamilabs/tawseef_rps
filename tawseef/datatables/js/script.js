@@ -1,6 +1,6 @@
-var xmlhttp = new XMLHttpRequest();
+let xmlhttp = new XMLHttpRequest();
 
-var url = "http://localhost/edubd/rps/tawseef/datatables/js/jsonData.json";
+let url = "http://localhost/tawseef_rps/tawseef/datatables/js/jsonData.json";
 
 xmlhttp.open("GET", url, true);
 
@@ -11,7 +11,7 @@ xmlhttp.send();
 xmlhttp.onreadystatechange = function () {
 
     if (this.readyState == 4 && this.status == 200) {
-        var data = JSON.parse(this.responseText);
+        let data = JSON.parse(this.responseText);
 
         // console.log(data);
 
@@ -32,7 +32,7 @@ xmlhttp.onreadystatechange = function () {
         // });
 
 
-        // var i = 1;
+        // let i = 1;
 
         // $("#myTable1").dataTable().fnDestroy();
 
@@ -81,7 +81,7 @@ xmlhttp.onreadystatechange = function () {
 
 
 
-        var i = 1;
+        let i = 1;
         $('#myTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -113,45 +113,61 @@ xmlhttp.onreadystatechange = function () {
                         // return '<button class="edit-button" data-id="' + data[0] + '">Edit</button><button class="delete-button" data-id="' + data[0] + '">Delete</button>';
                     }
                 }
-
-
-
-
             ]
         });
-
-
-
-
-
-
     }
 
     $(document).on('click', '.edit-button', function () {
         // Get the data for the row to be edited
-        var row = $(this).closest('tr');
-        var data = row.data();  // Get the data for the row
+        let row = $(this).closest('tr');
+        let data = row.data();  // Get the data for the row
+        ///console.log(data);
 
         // Show the edit form and populate it with the data
 
 
         // get the data from the nearest row
-        var name = $(this).closest("tr").find(".name").text(); // data.name;
-        var position = $(this).closest("tr").find(".position").text(); // data.position;
-        var office = $(this).closest("tr").find(".office").text(); // data.office;
-        var extn = $(this).closest("tr").find(".extn").text(); // data.extn;
-        var start_date = $(this).closest("tr").find(".start_date").text(); // data.start_date;
-        var salary = $(this).closest("tr").find(".salary").text(); // data.salary;
+        let name = $(this).closest("tr").find(".name").text(); // data.name;
+        let position = $(this).closest("tr").find(".position").text(); // data.position;
+        let office = $(this).closest("tr").find(".office").text(); // data.office;
+        let extn = $(this).closest("tr").find(".extn").text(); // data.extn;
+        let start_date = $(this).closest("tr").find(".start_date").text(); // data.start_date;
+        let salary = $(this).closest("tr").find(".salary").text(); // data.salary;
+
+        let dataObject = {
+            name, position, office, extn, start_date, salary
+        };
 
         // show the modal and populate the fields
-        ("#myModal").modal("show");
-        $("#myModal .modal-body #name").val(name);
-        $("#myModal .modal-body #email").val(position);
-        $("#myModal .modal-body #phone").val(office);
-        $("#myModal .modal-body #phone").val(extn);
-        $("#myModal .modal-body #phone").val(start_date);
-        $("#myModal .modal-body #phone").val(salary);
+        $("#myModal").modal("show");
+        //$("#myModal .modal-body #name").val(name);
+        $(".name").val(name);
+        $(".position").val(position);
+        $(".office").val(office);
+        $(".extn").val(extn);
+        $(".start_date").val(start_date);
+        $(".salary").val(salary);
+
+
+
     });
+
+
+
+    $(document).on('click', '.delete-button', function () {
+        // Get the data for the row to be edited
+        let row = $(this).closest('tr');
+        let data = row.data();  // Get the data for the row
+
+
+
+        row.remove();
+
+    });
+
+
+
+
 
 
 
