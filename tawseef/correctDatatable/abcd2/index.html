@@ -161,7 +161,7 @@
 				function showTable(data) {
 					let i = 1;
 					peopleTable = $("#myTable").DataTable({
-						ajax: "./jsonData.json",
+						ajax: "./jsonData.json", //  added from https://datatables.net/examples/ajax/objects.html 
 						dom: "Bfrtip",
 						buttons: ["copy", "csv", "excel", "pdf", "print"],
 						//data: data.data,
