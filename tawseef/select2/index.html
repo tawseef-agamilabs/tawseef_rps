@@ -30,7 +30,7 @@
 		<!-- select2 js -->
 		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-		
+
 		<!-- bootstrap 5  -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 	</head>
@@ -44,49 +44,50 @@
 <div class="col-md-8">
 
 <input class="prompt" type="text" placeholder="Search countries..."
-
 <select class="js-example-responsive" multiple="multiple" style="width: 75%"></select>
+
+<!-- <span class="js-example-responsive" id="select2-lgrt-container" role="textbox" aria-readonly="true" title="Search for a country"><span class="select2-selection__placeholder">Search for a country</span></span> -->
 </div>
+
 
 <div class="col-md-4">
 
-<a onclick="btn_handler()" class="btn btn-primary">Submit</a>
+
+<!-- <input type="submit" value="Submit"> -->
 
 </div>
 
 </div>
 
-</div
+</div>
 
 </div>
 
 <script>
-$(document).ready(function () {
-				//console.log("sdfdwd");
-
-				function findData() {
-					$.ajax({
-						url: "./jsonData.json",
-						method: "GET",
-						type: "json",
-						success: function (response) {
+	$(document).ready(function () {
+$('.js-example-responsive').select2({
+  ajax: {
+    url: './jsonData.json',
+    dataType: 'json',
+	method: "GET",
+	success: function (response) {
 							//console.log(response);
 							showTable(response);
-
-						},
-					});
-
-					$(".js-example-responsive").select2({
-    width: 'resolve' // need to override the changed default
+							// remove the table row
+							//peopleTable.row(row).data().remove();
+						}
+  }
 });
-				}
-				findData();
+
+let data={
+	id,
+	text
+};
 
 
 
-
-
-		</script>
+	});
+</script>
 
 </body>
 </html>
