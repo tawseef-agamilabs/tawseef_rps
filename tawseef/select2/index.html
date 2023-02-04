@@ -64,7 +64,6 @@
 						</label>
 
 						<input type="button" id="submit" value="Submit" />
-
 					</div>
 
 					<div class="col-md-4">
@@ -76,20 +75,20 @@
 
 		<script>
 			$(document).ready(function () {
-				// $(".getCountry").select2();
-				// 				$('.getCountry').select2({
-				//   ajax: {
-				//     type: 'POST',
-				//     url: './jsonData.json',
-				//     data: {},
-				//     dataType: 'json'
-				//     processResults: function (data) {
-				//       return {
-				//         results: data.results
-				//       };
-				//     }
-				//   }
-				// });
+				$(".getCountry").select2();
+				$(".getCountry").select2({
+					ajax: {
+						type: "POST",
+						url: "./jsonData.json",
+						data: {},
+						dataType: "json",
+						processResults: function (data) {
+							return {
+								results: data.data,
+							};
+						},
+					},
+				});
 
 				// function formatState(state) {
 				// 	if (!state.id) {
@@ -129,10 +128,6 @@
 				// 		cache: true,
 				// 	},
 				// });
-
-
-
-
 			});
 		</script>
 	</body>
