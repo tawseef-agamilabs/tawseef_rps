@@ -56,11 +56,7 @@
 							<!-- <select class="js-example-templating js-states form-control" id="id_label_multiple" multiple="multiple"></select> -->
 
 							<!-- https://stackoverflow.com/questions/14558578/how-to-use-select2-js -->
-							<select multiple class="getCountry" style="width: 300px">
-								<option value="one">First</option>
-								<option value="two" disabled="disabled">Second (disabled)</option>
-								<option value="three">Third</option>
-							</select>
+							<select class="getCountry" style="width: 300px"></select>
 						</label>
 
 						<input type="button" id="submit" value="Submit" />
@@ -77,59 +73,47 @@
 
 		<script>
 			$(document).ready(function () {
-				$(".getCountry").select2();
-				$(".getCountry").select2({
-					ajax: {
-						type: "POST",
-						url: "./jsonData.json",
-						data: {},
-						dataType: "json",
-						processResults: function (data) {
-							return {
-								results: data.data,
-							};
+				$(".getCountry")
+					.select2({
+						placeholder: "Search country...",
+						allowClear: true,
+						ajax: {
+							url: "jsonData.json",
+							dataType: "json",
+							type: "POST",
+							data: (params) => {
+								return {
+									search_key: params.term,
+									pageno: params.page || 1,
+								};
+							},
+							cache: false,
 						},
-					},
+						templateResult: (value) => {
+							if (!value.id) {
+								return value.text;
+							}
+
+							return $(`<div class="media">
+									<img src="${value.logo}" class="mr-2" width="40" height="40" alt="...">
+									<div class="media-body">
+										<h6 class="my-0">${value.text}</h6>
+										<span class="small">${value.address} (${value.id})</span>
+									</div>
+								</div>`);
+						},
+						templateSelection: (value) => (value.id ? value.text : "Search Country..."),
+					})
+					.val(null)
+					.trigger("change");
+
+				$(".getCountry").on("select2:select", function (e) {
+					let data = e.params.data;
+					// console.log(data);
+					if (data.url) {
+						window.open(data.url, "_blank");
+					}
 				});
-
-				// function formatState(state) {
-				// 	if (!state.id) {
-				// 		return state.text;
-				// 	}
-				// 	var baseUrl = "./jsonData.json";
-				// 	var $state = $('<span><img src="' + baseUrl + "/" + state.element.value.toLowerCase() + '.png" class="img-flag" /> ' + state.text + "</span>");
-				// 	return $state;
-				// }
-
-				// $(".js-example-templating").select2({
-				// 	templateResult: formatState,
-				// });
-
-				// $.ajax({
-				// 	url: "./jsonData.json",
-				// 	type: "GET",
-				// 	dataType: "json",
-				// 	success: function (results) {
-				// 		$(".getCountry").select2({
-				// 			data: results.text,
-				// 		});
-				// 	},
-				// 	error: function (error) {
-				// 		console.error(error);
-				// 	},
-				// });
-
-				// $(".getCountry").select2({
-				// 	placeholder: "Select an option",
-				// });
-
-				// https://select2.org/configuration/data-attributes
-				// $(".getCountry").select2({
-				// 	ajax: {
-				// 		url: "./jsonData.json",
-				// 		cache: true,
-				// 	},
-				// });
 			});
 		</script>
 	</body>
