@@ -35,6 +35,7 @@
 	</head>
 	<body>
 		<!-- http://localhost/tawseef_rps/tawseef/select2/ -->
+		<!-- https://select2.org/getting-started/installation -->
 
 		<div style="border: 1px solid black; padding: 100px" class="container">
 			<div style="padding: 100px">
@@ -56,10 +57,9 @@
 							<!-- <select class="js-example-templating js-states form-control" id="id_label_multiple" multiple="multiple"></select> -->
 
 							<!-- https://stackoverflow.com/questions/14558578/how-to-use-select2-js -->
-							<select multiple class="getCountry" style="width: 300px">
-								<option value="one">First</option>
+							<select single class="getCountry" style="width: 300px">
+								<option value="one">Select Country</option>
 								<option value="two" disabled="disabled">Second (disabled)</option>
-								<option value="three">Third</option>
 							</select>
 						</label>
 
@@ -88,6 +88,7 @@
 							};
 						},
 					},
+					tags: true,
 				});
 
 				// function formatState(state) {
