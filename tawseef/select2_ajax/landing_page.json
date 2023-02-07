@@ -1,0 +1,78 @@
+{
+    "error": false,
+    "results": [
+        {
+            "id": "1",
+            "url": "https://mcc.collegebd.org/",
+            "name": "Mahila College Chattogram",
+            "address": "49, Enayet Bazar, Chattogram",
+            "logo": "https://mcc.collegebd.org/assets/image/emc_logo.png"
+        },
+        {
+            "id": "2",
+            "url": "https://hatpgovs.collegebd.org/",
+            "name": "Hathazari Parbati Model Govt. High School",
+            "address": "Fatika, Hathazari, Chattogram",
+            "logo": "https://hatpgovs.collegebd.org/assets/image/hatpgovs_logo.jpg"
+        },
+        {
+            "id": "3",
+            "url": "https://mmdc.edu.bd/",
+            "name": "Mehendigonj Mohila College",
+            "address": "Mehendigonj, Barishal",
+            "logo": "https://mmdc.edu.bd/assets/image/mmdc_logo.png"
+        },
+        {
+            "id": "4",
+            "url": "https://bafsc.edu.bd/",
+            "name": "BAF Shaheen College Chattogram",
+            "address": "Patenga, Chattogram",
+            "logo": "https://bafsc.edu.bd/assets/image/bafsc_logo.png"
+        },
+        {
+            "id": "5",
+            "url": "https://senbaggov.collegebd.org/",
+            "name": "Senbag Govt. College",
+            "address": "Senbag, Nowakhali",
+            "logo": "https://senbaggov.collegebd.org/assets/image/senbaggov_logo.png"
+        },
+        {
+            "id": "6",
+            "url": "https://cuc.collegebd.org/",
+            "name": "Chittagong University College",
+            "address": "Chittagong University Campus",
+            "logo": "https://cuc.collegebd.org/assets/image/logo.gif"
+        },
+        {
+            "id": "7",
+            "url": "https://jugoshikha.collegebd.org/",
+            "name": "Jugoshikha Girls High School, Gopalganj",
+            "address": "Thanapara, Gopalganj",
+            "logo": "https://jugoshikha.collegebd.org/assets/image/logo.gif"
+        },
+        {
+            "id": "8",
+            "url": "https://edu.collegebd.org/",
+            "name": "Educational Institute Bangladesh",
+            "address": "N/A",
+            "logo": "https://edu.collegebd.org/assets/image/logo.gif"
+        },
+        {
+            "id": "9",
+            "url": "https://kg.collegebd.org/",
+            "name": "KG Educational Institute Bangladesh",
+            "address": "N/A",
+            "logo": "https://kg.collegebd.org/assets/image/logo.gif"
+        },
+        {
+            "id": "10",
+            "url": "http://my.eschoolbd.org/",
+            "name": "My Digital School",
+            "address": "N/A",
+            "logo": "http://my.eschoolbd.org/assets/image/logo.gif"
+        }
+    ],
+    "pagination": {
+        "more": false
+    }
+}
