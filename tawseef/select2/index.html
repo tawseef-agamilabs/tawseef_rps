@@ -77,9 +77,12 @@
 			$(document).ready(function () {
 				//$(".getCountry").select2();
 				$(".getCountry").select2({
+					minimumInputLength: 0,
+					minimumResultsForSearch: 3,
 					ajax: {
 						type: "POST",
 						url: "./jsonData.json",
+						delay: 250,
 						data: {},
 						dataType: "json",
 						processResults: function (data) {
