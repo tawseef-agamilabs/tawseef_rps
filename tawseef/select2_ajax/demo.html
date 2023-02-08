@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	</head>
+
+	<body>
+		<div class="container py-5">
+			<select id="country_select" class="form-select"></select>
+
+			<button id="set_nepal_button" class="btn btn-primary" type="button">Set Nepal</button>
+		</div>
+
+		<script>
+			let select = $(`#country_select`);
+
+			// $.post(
+			// 	`./jsonData.json`,
+			// 	(resp) => {
+			// 		$.each(resp.results, (index, value) => {
+			// 			select.append(`<option value="${value.id}">${value.text}</option>`);
+			// 			// $(`<option value="${value.id}">${value.text}</option>`).appendTo(select);
+			// 			// select.append(new Option(value.text, value.id));
+			// 		});
+
+			// 		select
+			// 			.select2({
+			// 				placeholder: `Select country`,
+			// 				allowClear: true,
+			// 			})
+			// 			.val(null)
+			// 			.trigger(`change`);
+			// 	},
+			// 	`json`
+			// );
+
+			select
+				.select2({
+					placeholder: `Select country`,
+					allowClear: true,
+					// data: function (params) {
+					// 	var query = {
+					// 		search: params.term,
+					// 		pageno: params.page || 1,
+					// 	};
+
+					// 	// Query parameters will be ?search=[term]&page=[page]
+					// 	return query;
+					// },
+					ajax: {
+						url: `./jsonData.json`,
+						method: "POST",
+						dataType: "json",
+					},
+					// processResults: function (data, params) {
+					// 	params.page = params.page || 1;
+
+					// 	return {
+					// 		results: data.peoples,
+					// 		pagination: {
+					// 			more: params.page * 10 < data.data_size,
+					// 		},
+					// 	};
+					// },
+				})
+				.val(null)
+				.trigger(`change`);
+
+			$(`#set_nepal_button`).click(function (e) {
+                let countryid = 4;
+                if (!$(`option[value="${countryid}"]`, select).length) {
+                    select.append(new Option(`Nepal`, countryid));
+                }
+				select.val(countryid).trigger(`change`);
+			});
+		</script>
+	</body>
+</html>
