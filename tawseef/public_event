@@ -1,0 +1,2836 @@
+<?php
+
+date_default_timezone_set('Asia/Dhaka');
+$startDate = strtotime(date('2023-01-30 15:00:00'));
+$endDate = strtotime(date('2023-03-12 23:59:59'));
+$nowDate = time();
+
+$admin_reg = false;
+if (isset($_GET['admin_reg']) && $_GET['admin_reg'] === "EditorAdmin") {
+    $admin_reg = $_GET['admin_reg'];
+} else if ($nowDate < $startDate) {
+    echo "নিবন্ধন এখনো শুরু হয়নি!";
+    exit();
+} else if ($nowDate > $endDate) {
+    echo "নিবন্ধন সময় শেষ হয়েছে!";
+    //" এডমিনের সাথে যোগাযোগ করুন!";
+    exit();
+} else {
+    //
+}
+
+
+$headgroupkey = 'self';
+
+require_once "lang.php";
+
+date_default_timezone_set("Asia/Dhaka");
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+session_destroy();
+session_start();
+
+// $base_path = dirname(__FILE__);
+// require_once($base_path . "/php/admin/db/Database.php");
+
+// $db = new Database();
+// $dbcon = $db->db_connect();
+
+// if (!$db->is_connected()) {
+//     $response['error'] = true;
+//     $response['message'] = "Database is not connected!";
+//     echo json_encode($response);
+//     exit();
+// }
+
+// $sql = "SELECT * FROM alm_department";
+// $stmt = $dbcon->prepare($sql);
+// $stmt->execute();
+// $result = $stmt->get_result();
+
+// $deptArray = array();
+// while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+//     $deptArray[] = $row;
+// }
+
+// $dbcon->close();
+
+include_once(dirname(__FILE__) . "/configmanager/fileupload_configuration.php");
+include_once(dirname(__FILE__) . "/configmanager/org_configuration.php");
+include_once(dirname(__FILE__) . "/configmanager/utility.php");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>Registration Form | <?= $lang['eventtitle'] ?></title>
+
+    <meta name="description" content="<?= $lang['description'] ?>">
+    <meta name="keywords" content="<?= $lang['keywords'] ?>">
+
+    <meta id="MetaRobots" name="ROBOTS" content="INDEX, FOLLOW" />
+
+    <link rel="canonical" href="<?= $lang['url'] ?>" />
+
+    <!-- Open Graph Data -->
+    <meta property="og:title" content="<?= $lang['eventtitle'] ?>" />
+    <meta property="og:url" content="<?= $lang['url'] ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="<?= $lang['url'] ?><?= $lang['banner'] ?>" />
+    <meta property="og:site_name" content="<?= $lang['eventtitle'] ?>" />
+    <meta property="og:description" content="<?= $lang['description'] ?>" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="<?= $lang['url'] ?>" />
+    <meta name="twitter:creator" content="<?= $lang['orgname'] ?>" />
+    <meta name="twitter:title" content="<?= $lang['eventtitle'] ?>" />
+    <meta name="twitter:description" content="<?= $lang['description'] ?>" />
+    <meta name="twitter:image" content="<?= $lang['url'] ?><?= $lang['banner'] ?>" />
+
+    <!-- Verification metatags -->
+    <meta name="google-site-verification" content="<?= $lang['google-site-verification'] ?>" />
+    <meta name="msvalidate.01" content="" />
+
+    <!-- Fav -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/fav/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/icons/fav/favicon-16x16.png">
+    <link rel="manifest" href="./assets/icons/fav/site.webmanifest">
+    <link rel="mask-icon" href="./assets/icons/fav/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="./assets/icons/fav/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="msapplication-config" content="./assets/icons/fav/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha256-ENFZrbVzylNbgnXx0n3I1g//2WeO47XxoPe0vkp3NC8=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="css/loading.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha256-3blsJd4Hli/7wCQ+bmgXfOdK7p/ZUMtPXY08jmxSSgk=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="vendor/cropper/cropper.min.css">
+    <script src="vendor/cropper/cropper.min.js"></script>
+
+    <script src='https://www.google.com/recaptcha/api.js?render=6Lcw7jYkAAAAAJfAHygNY2qgYMPGspHkD-p-h9zW'></script>
+
+    <style media="screen">
+        .lds-facebook {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .lds-facebook div {
+            display: inline-block;
+            position: absolute;
+            left: 8px;
+            width: 16px;
+            background: #fff;
+            animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+        }
+
+        .lds-facebook div:nth-child(1) {
+            left: 8px;
+            animation-delay: -0.24s;
+        }
+
+        .lds-facebook div:nth-child(2) {
+            left: 32px;
+            animation-delay: -0.12s;
+        }
+
+        .lds-facebook div:nth-child(3) {
+            left: 56px;
+            animation-delay: 0;
+        }
+
+        @keyframes lds-facebook {
+            0% {
+                top: 8px;
+                height: 64px;
+            }
+
+            50%,
+            100% {
+                top: 24px;
+                height: 32px;
+            }
+        }
+
+        .overflow_loader {
+            display: none;
+        }
+
+        .overflow_loader.show {
+            background-color: #00000088;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: fixed;
+            z-index: 1000;
+            width: 100vw;
+            height: 100vh;
+            top: 0px;
+            left: 0px;
+        }
+
+        .overflow_loader.show div {
+            display: flex;
+            justify-content: center;
+            /* top: calc(calc(100vh - 40px) / 2); */
+            /* left: calc(calc(100vw - 40px) / 2); */
+        }
+    </style>
+
+    <style>
+        body {
+            font-family: 'Kalpurush', var(--font-family-sans-serif);
+        }
+
+        .bn_font {
+            font-family: 'Kalpurush', Arial, sans-serif !important;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user_select_none {
+            user-select: none;
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
+        }
+
+        /* @media (max-width: 992px) {
+            body {
+                width: 1000px;
+            }
+        } */
+
+        .check-mark {
+            font-size: 24px;
+            color: #26662F;
+        }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .custom-border {
+            border: 2px dotted red;
+            border: 10px solid transparent;
+            padding: 15px;
+            border-image: url(assets/image/border.png) 30 stretch;
+            -moz-border-image: url(assets/image/border.png) 30 stretch;
+            -webkit-border-image: url(assets/image/border.png) 30 stretch;
+        }
+
+        .custom_shadow {
+            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+        }
+
+        .custom_shadow:hover {
+            box-shadow: 0 4px 10px 0 rgb(0 0 0 / 20%), 0 4px 20px 0 rgb(0 0 0 / 10%);
+        }
+
+        .form_background {
+            /* width: 1000px !important; */
+            /* border-radius: 3rem; */
+            /* background-image: linear-gradient(#fffdf1, #fffdd8); */
+
+            background-color: #f0f7ff;
+            /* background: linear-gradient(90deg, #B9D9EB, transparent); */
+            background-image: url('assets/image/tile-01.jpeg');
+            background-size: 180px;
+            background-blend-mode: color-burn;
+        }
+
+        .table-bordered td,
+        .table-bordered th {
+            height: 42.59px;
+            border: 1px solid #012308;
+        }
+
+        .divider_border {
+            border-top: 2px solid #f27724;
+            border-left: 0px;
+            padding-top: 0.75rem;
+        }
+
+        /* @media (max-width: 991px) {
+            .notice-container {
+                max-width: 1000px;
+            }
+        } */
+
+        @media (min-width: 768px) {
+            .divider_border {
+                border-top: 0px;
+                border-left: 2px solid #f27724;
+                padding-top: 0rem;
+            }
+        }
+    </style>
+
+    <style>
+        .container {
+            width: 100%;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        @media (min-width: 576px) {
+            .container {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+    </style>
+
+    <style>
+        .animate-charcter {
+            background-image: linear-gradient(-225deg,
+                    #5852cd 0%,
+                    #171437 29%,
+                    #00a8b4 67%,
+                    #085c63 100%);
+            background-size: auto auto;
+            background-clip: border-box;
+            background-size: 200% auto;
+            /* color: #fff; */
+            background-clip: text;
+            text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textclip 2s linear infinite;
+            display: inline-block;
+            /* font-size: 30px; */
+        }
+
+        @keyframes textclip {
+            to {
+                background-position: 200% center;
+            }
+        }
+    </style>
+
+    <!-- my style -->
+    <style>
+        .select_btn {
+            margin-bottom: 10px;
+            margin-left: 69px;
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    </script>
+</head>
+
+<body class="overflow-auto">
+
+    <div class="loading_overlay" style="display:none">
+        <div class="loading_div">
+            <!--<img src="assets/image/data_loading.gif" style="width:100%;">-->
+            <div class="lds-spinner">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="loading_msg">
+                Processing Request.
+                <br>Please Wait...
+            </div>
+        </div>
+    </div>
+
+    <div class="container overflow-hidden">
+        <div class="d-print-none row justify-content-between custom-border mt-4 mb-3">
+            <div class="order-0 order-md-0 col-6 col-md-3 text-center">
+                <a href="index.php">
+                    <img width="100" src="<?= $lang['eventlogo'] ?>" class="img-fluid mb-2" alt="">
+                </a>
+            </div>
+
+            <div class="order-2 order-md-1 col-12 col-md-6 divider_border">
+                <div>
+                    <span class='check-mark'>&#10003;</span>
+                    Please read this
+                    <a href="assets/files/MGT50-General-Instruction-Online-Registration.pdf" target="_blank">instructions</a>
+                    before Application
+                </div>
+                <div class="mb-2">
+                    <span class='check-mark'>&#10003;</span>
+                    Use Google Chrome brwoser for better experience।
+                </div>
+            </div>
+
+            <div class="order-1 order-md-2 col-6 col-md-3 text-center">
+                <span>Click here to go to previous page</span>
+                <br>
+                <a href="index.php" class="px-3 mt-1 btn btn-warning rounded-pill custom_shadow">
+                    <i>&#8592</i>
+                    Go back
+                </a>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mx-lg-auto mt-2 mb-2">
+            <form id="event_application_form">
+                <div class="position-relative form_background shadow">
+                    <div class="row align-items-center p-3">
+                        <div class="order-1 order-md-1 col-6 col-md-3 text-center">
+                            <img src="<?= $lang['eventlogo'] ?>" class="img-fluid py-3" style="max-width: 180px;" alt="NSU Alumni Night 2023">
+                        </div>
+
+                        <div class="order-3 order-md-2 col-12 col-md-6 text-center">
+                            <div class="font-weight-bold" style="font-size: 27px;color:#185abc;text-shadow: 0 1px 3px rgb(24 90 187 / 70%);">WE DREAM,WE BULID</div>
+                            <div class="font-weight-bold" style="font-size: 27px;color:#185abc;text-shadow: 0 1px 3px rgb(24 90 187 / 70%);"></div>
+                            <div class="mt-2 font-italic px-2 animate-charcter" style="font-size: 32px;color: #2b37ff; font-weight: bold;">AGAMILABS LIMITED, CHITTAGONG</div>
+                        </div>
+
+                        <div class="order-2 order-md-3 col-6 col-md-3 text-center">
+                            <img src="<?= $lang['orglogo'] ?>" class="img-fluid rounded" style="max-width: 180px;" alt="Alumni Association Of North South University, Chattogram">
+                        </div>
+                    </div>
+
+                    <div class="text-center rounded mx-2 mx-mg-3 mb-3" style="background: #00a9b5;box-shadow: 0 2px 8px rgb(0 169 181 / 80%);">
+                        <div class="font-weight-bold" style="font-size: 36px;color: #fff;">EVENT APPLICATION FORM</div>
+                    </div>
+
+                    <div class="px-2 px-md-3 px-xl-5 pb-4">
+                        <div class="row mb-2">
+                            <div class="col-md-3 col-lg-3 align-self-center px-0">
+                                <!-- REGISTRATION DATE -->
+                                <div class="d-flex justify-content-end align-items-center mb-3">
+                                    <div class="font-weight-bold mx-2">Date</div>
+                                    <div id="reg_day" class="user_select_none text-center font-weight-bold bg-white border border-dark rounded px-2 mx-2" style="width: 65px;height: 38px;font-size: 22px;">
+                                        <?= (str_pad(date("d"), 2, "0", STR_PAD_LEFT)); ?>
+                                    </div>
+                                    <div id="reg_month" class="user_select_none text-center font-weight-bold bg-white border border-dark rounded px-2 mx-2" style="width: 65px;height: 38px;font-size: 22px;">
+                                        <?= (str_pad(date("m"), 2, "0", STR_PAD_LEFT)); ?>
+                                    </div>
+                                    <div id="reg_year" class="user_select_none text-center font-weight-bold bg-white border border-dark rounded px-2 mx-2" style="width: 65px;height: 38px;font-size: 22px;">
+                                        <?= (date("Y")); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 align-self-end">
+                                <div class="text-center text-info font-weight-bold">
+                                    Star (*) marked fields are mandatory
+                                </div>
+                                <div class="text-center text-info font-weight-bold">
+                                    Use Google Chrome (<span><img width="16" src="assets/image/chrome-logo.png" alt=""></span>)
+                                    or Mozilla Firefox (<span><img width="16" src="assets/image/firefox-logo.png" alt=""></span>)
+                                    Browser for Application
+                                </div>
+
+                                <div class="text-center text-dark font-weight-bold mt-2 mb-3" style="font-size: 18px;">
+                                    Please fillup the Application form in English
+                                </div>
+                            </div>
+
+                            <!-- PHOTO -->
+                            <div class="col-md-3 col-lg-3 text-center">
+                                <label class="d-block mb-0">
+                                    <img id="people_photo" src="assets/image/real_logo.png" style="width: 160px;height: 160px;cursor:pointer;" title="Click to select photo..." class="img-fluid shadow-sm rounded mb-2">
+                                </label>
+                                <input type="file" id="profile_pic_input" name="image" style="display: none;" accept="image/*">
+                                <!-- <div>আপনার ছবি দিন *</div> -->
+                                <div class="font-weight-bold mx-auto" style="max-width: 235px;">Upload a Event Logo suitable for the souvenir</div>
+                            </div>
+                        </div>
+
+                        <!--Applicant PHONE -->
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-lg-1 col-form-label font-weight-bold pr-0">Applicant Mobile *</label>
+
+                            <div class="col-sm-10 col-lg-11">
+                                <div class="d-flex justify-content-between">
+                                    <input name="phone" class="form-control shadow-sm" type="number" maxlength="11" placeholder="01XXXXXXXXX (11 digit)" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Applicant NAME -->
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-lg-1 col-form-label font-weight-bold pr-0">Applicant Name *</label>
+
+                            <div class="col-sm-10 col-lg-11">
+                                <div class="d-flex">
+                                    <select name="title" class="d-none form-control shadow-sm mr-2" style="width: 75px;">
+                                        <option value="">Select...</option>
+                                        <option value="1">Mr.</option>
+                                        <option value="2">Ms.</option>
+                                        <option value="3">Dr.</option>
+                                    </select>
+                                    <input name="applicant_name" class="form-control shadow-sm text-uppercase" type="text" placeholder="Type your name in english" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Event Name -->
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-lg-1 col-form-label font-weight-bold pr-0">Event Name</label>
+
+                            <div class="col-sm-10 col-lg-11">
+                                <input name="event_name" class="form-control shadow-sm" placeholder="Type Event Name in English" type="text">
+                            </div>
+                        </div>
+
+                        <!-- Organization Title -->
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-lg-1 col-form-label font-weight-bold pr-0">Organization Name</label>
+
+                            <div class="col-sm-10 col-lg-11">
+                                <input name="org_name" class="form-control shadow-sm" placeholder="Type Organization Name in English" type="text">
+                            </div>
+                        </div>
+
+                        <div class="w-25 mb-3">
+                            <div class="border border-dark"></div>
+                        </div>
+
+                        <!-- Event Venue -->
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-form-label font-weight-bold pr-0">Event Venue *</label>
+
+                            <div class="col-sm-10">
+                                <textarea name="event_venue" class="form-control shadow-sm" style="min-height: 86px;max-height: 190px;" maxlength="500" placeholder="Please type Event Venue in details here..." required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="w-25 mb-3">
+                            <div class="border border-dark"></div>
+                        </div>
+
+
+                        <!-- Date Duration -->
+                        <div class="position-relative row align-items-center form-group">
+                            <!-- Date Duration From -->
+
+                            <label class="col-sm-2 col-lg-1 font-weight-bold pr-0">Event Duration (Start From *)</label>
+
+                            <div class="col-sm-4 col-lg-5 mb-3 mb-sm-0">
+                                <input name="date_start" class="form-control shadow-sm" type="date" placeholder="" required>
+                            </div>
+
+                            <!-- Date Duration To -->
+                            <label class="col-sm-2 col-lg-1 font-weight-bold pr-0 pl-sm-0 text-sm-right">(End *)</label>
+
+                            <div class="col-sm-4 col-lg-5">
+                                <input name="date_end" class="form-control shadow-sm" type="date" placeholder="" required>
+                            </div>
+                        </div>
+
+                        <!-- Slogan Name -->
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-lg-1 col-form-label font-weight-bold pr-0">Slogan</label>
+
+                            <div class="col-sm-10 col-lg-11">
+                                <input name="slogan_en" class="form-control shadow-sm" placeholder="Type Slogan Name in English or Bangla" type="text">
+                            </div>
+                        </div>
+
+                        <!-- URL Name -->
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-lg-1 col-form-label font-weight-bold pr-0">Prefix of URL Name</label>
+
+                            <div class="col-sm-10 col-lg-11">
+                                <input name="url_prefix" class="form-control shadow-sm" placeholder="Type URL Name (i.e. https/www.__url name__.agamievent.org)" type="text">
+                            </div>
+                        </div>
+
+                        <div class="w-25">
+                            <div class="border border-dark"></div>
+                        </div>
+
+                        <!--Image or Gallery Show -->
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-form-label font-weight-bold pr-0">Do you want to Show Gallery?</label>
+
+                            <div class="col-sm-10 ">
+                                <input name="gallery_link" class="form-control shadow-sm" placeholder="Please Give Drive or any Link where Images Exist " type="text">
+                            </div>
+                        </div>
+
+                        <!--Instruction Sheets or Video Tutorials Link -->
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-2 col-form-label font-weight-bold pr-0">Instruction Sheets or Video Tutorials Link</label>
+
+                            <div class="col-sm-10">
+                                <input name="video_link" class="form-control shadow-sm" placeholder="Please Give Drive or any Link where file or video exists" type="text">
+                            </div>
+                        </div>
+
+                        <div class="w-100 mt-2">
+                            <div class="border border-dark"></div>
+                        </div>
+
+
+                        <!-- Registration Form Input Fields Confirmation -->
+
+                        <div class="mt-3">
+                            <h4 style="font-weight: 600;color: brown;" class="mb-4 mt-4 text-center">Registration Form Input Fields Confirmation</h4>
+                        </div>
+
+                        <div class="w-100 mb-4">
+                            <div class="border border-dark"></div>
+                        </div>
+
+
+                        <!-- All Input Name -->
+
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-1 col-form-label font-weight-bold pr-0">All Inputs</label>
+
+                            <div class="col-sm-11">
+                                <div class="table-responsive">
+                                    <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="user_name" name="user_name" class="custom-control-input" type="checkbox" value="1">
+                                                        <label class="custom-control-label w-100" for="user_name">Name</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="user_name_method_bn" name="user_name_method" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="user_name_method_bn">Bangla</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="user_name_method_en" name="user_name_method" class="custom-control-input" type="checkbox" value="2" disabled>
+                                                        <label class="custom-control-label w-100" for="user_name_method_en">English</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="user_name_method_both" name="user_name_method" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="user_name_method_both">Both</label>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="contact_address" name="contact_address" class="custom-control-input" type="checkbox" value="2">
+                                                        <label class="custom-control-label w-100" for="contact_address">Contact Address</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="contact_address_bn" name="contact_address_method" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="contact_address_bn">Bangla</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="contact_address_en" name="contact_address_method" class="custom-control-input" type="checkbox" value="2" disabled>
+                                                        <label class="custom-control-label w-100" for="contact_address_en">English</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="contact_address_both" name="contact_address_method" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="contact_address_both">Both</label>
+                                                    </div>
+
+                                                </th>
+
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="profession" name="profession" class="custom-control-input" type="checkbox" value="3">
+                                                        <label class="custom-control-label w-100" for="profession">Professional Information
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="profession_detail_profession" name="profession_detail" class="custom-control-input" type="checkbox" value="8" disabled>
+                                                        <label class="custom-control-label w-100" for="profession_detail_profession">Profession</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="profession_detail_designation" name="profession_detail" class="custom-control-input" type="checkbox" value="9" disabled>
+                                                        <label class="custom-control-label w-100" for="profession_detail_designation">Designation </label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="profession_detail_organization" name="profession_detail" class="custom-control-input" type="checkbox" value="10" disabled>
+                                                        <label class="custom-control-label w-100" for="profession_detail_organization">Organization</label>
+                                                    </div>
+                                                </th>
+
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="education" name="education" class="custom-control-input" type="checkbox" value="1">
+                                                        <label class="custom-control-label w-100" for="education">Education Details</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="education_jsc" name="education_detail" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="education_jsc">JSC</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="education_ssc" name="education_detail" class="custom-control-input" type="checkbox" value="2" disabled>
+                                                        <label class="custom-control-label w-100" for="education_ssc">SSC</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="education_hsc" name="education_detail" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="education_hsc">HSC</label>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="education_hons" name="education_detail" class="custom-control-input" type="checkbox" value="4" disabled>
+                                                        <label class="custom-control-label w-100" for="education_hons">HONS.</label>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="education_master" name="education_detail" class="custom-control-input" type="checkbox" value="5" disabled>
+                                                        <label class="custom-control-label w-100" for="education_master">MASTERS</label>
+                                                    </div>
+
+                                                </th>
+
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="identity" name="identity" class="custom-control-input" type="checkbox" value="1">
+                                                        <label class="custom-control-label w-100" for="identity">Identity</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="identity_nid" name="identity_detial" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="identity_nid">Nid</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="identity_passport" name="identity_detial" class="custom-control-input" type="checkbox" value="5" disabled>
+                                                        <label class="custom-control-label w-100" for="identity_passport">Passport</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="identity_birth" name="identity_detial" class="custom-control-input" type="checkbox" value="6" disabled>
+                                                        <label class="custom-control-label w-100" for="identity_birth">Birth Certificate</label>
+                                                    </div>
+
+
+                                                </th>
+
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="attend" name="attend" class="custom-control-input" type="checkbox" value="1">
+                                                        <label class="custom-control-label w-100" for="attend">Attends with Self</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="attend_spouse" name="attend_detail" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="attend_spouse">Spouse</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="attend_kid" name="attend_detail" class="custom-control-input" type="checkbox" value="2" disabled>
+                                                        <label class="custom-control-label w-100" for="attend_kid">Kid</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="attend_driver" name="attend_detail" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="attend_driver">Driver</label>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="attend_guest" name="attend_detail" class="custom-control-input" type="checkbox" value="4" disabled>
+                                                        <label class="custom-control-label w-100" for="attend_guest">Guest</label>
+                                                    </div>
+
+                                                </th>
+
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="card_design" name="need_card" class="custom-control-input" type="checkbox" value="2">
+                                                        <label class="custom-control-label w-100" for="card_design">Confirmation Card Design</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div id="choose_card" class="d-none custom-control custom-control-inline">
+                                                        <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-outline-primary">Choose Here</button>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="own_card" name="own_card" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="own_card">Choose Your Own Design</label>
+                                                    </div>
+
+                                                </th>
+                                                <th class="d-none show_agami_design">
+                                                    <div style="width:100%;height: 100%;padding: 0;" class="align-top custom-control custom-control-inline">
+                                                        <img id="set_image" class="w-100" alt="">
+                                                    </div>
+                                                </th>
+                                                <th class="d-none show_own_design" style="padding: 0;">
+                                                    <input name="card_design" class="form-control shadow-sm " type="file">
+                                                    <!-- <small class="text-danger font-weight-bold">PDF/JPG/PNG formatted maximum size 500KB </small> -->
+                                                </th>
+
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="event_payment" name="event_payment" class="custom-control-input" type="checkbox" value="1">
+                                                        <label class="custom-control-label w-100" for="event_payment">Event Registration Payment</label>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="payment_bkash" name="payment_method" class="custom-control-input" type="checkbox" value="1" disabled>
+                                                        <label class="custom-control-label w-100" for="payment_bkash">Bkash</label>
+                                                    </div>
+
+                                                    <div class="d-none custom-checkbox custom-control custom-control-inline">
+                                                        <input id="payment_nagad" name="payment_method" class="custom-control-input" type="checkbox" value="2" disabled>
+                                                        <label class="custom-control-label w-100" for="payment_nagad">Nagad</label>
+                                                    </div>
+
+                                                    <div class="d-none custom-checkbox custom-control custom-control-inline">
+                                                        <input id="payment_dbbl" name="payment_method" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="payment_dbbl">DBBL</label>
+                                                    </div>
+                                                    <div class="d-none custom-checkbox custom-control custom-control-inline">
+                                                        <input id="payment_rocket" name="payment_method" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="payment_rocket">Rocket</label>
+                                                    </div>
+                                                    <div class="d-none custom-checkbox custom-control custom-control-inline">
+                                                        <input id="payment_bank" name="payment_method" class="custom-control-input" type="checkbox" value="3" disabled>
+                                                        <label class="custom-control-label w-100" for="payment_bank">Through Bank</label>
+                                                    </div>
+                                                </th>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="w-25 mb-4">
+                            <div class="border border-dark"></div>
+                        </div>
+
+
+                        <!-- All Input Name -->
+
+
+                        <div class="position-relative row align-items-center form-group">
+                            <label class="col-sm-1 col-form-label font-weight-bold pr-0">All Inputs</label>
+
+                            <div class="col-sm-11">
+                                <div class="table-responsive">
+                                    <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                        <tbody>
+
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_image" name="single_input" class="custom-control-input" type="checkbox" value="4">
+                                                        <label class="custom-control-label w-100" for="single_image">Image</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_dob" name="single_input" class="custom-control-input" type="checkbox" value="5">
+                                                        <label class="custom-control-label w-100" for="single_dob">Date of Birth</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_blood" name="single_input" class="custom-control-input" type="checkbox" value="6">
+                                                        <label class="custom-control-label w-100" for="single_blood">Blood Group</label>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_father" name="single_input" class="custom-control-input" type="checkbox" value="5">
+                                                        <label class="custom-control-label w-100" for="single_father">Father Name</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_mother" name="single_input" class="custom-control-input" type="checkbox" value="6">
+                                                        <label class="custom-control-label w-100" for="single_mother">Mother Name</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_mobile" name="single_input" class="custom-control-input" type="checkbox" value="6">
+                                                        <label class="custom-control-label w-100" for="single_mobile">Mobile</label>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_email" name="single_input" class="custom-control-input" type="checkbox" value="5">
+                                                        <label class="custom-control-label w-100" for="single_email">Email</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_fb" name="single_input" class="custom-control-input" type="checkbox" value="6">
+                                                        <label class="custom-control-label w-100" for="single_fb">Fb Link</label>
+                                                    </div>
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_address" name="single_input" class="custom-control-input" type="checkbox" value="5">
+                                                        <label class="custom-control-label w-100" for="single_address">Address</label>
+                                                    </div>
+
+                                                    <div class="custom-checkbox custom-control custom-control-inline">
+                                                        <input id="single_tshirt" name="single_input" class="custom-control-input" type="checkbox" value="6">
+                                                        <label class="custom-control-label w-100" for="single_tshirt">T-Shirt</label>
+                                                    </div>
+
+                                                </th>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-25">
+                            <div class="border border-dark"></div>
+                        </div>
+
+
+                        <div class="row justify-content-center align-items-center">
+                            <!-- Event HelpLine -->
+
+
+                            <div class="col-sm-12 col-md-6">
+                                <div class="position-relative row align-items-center form-group">
+                                    <label class="col-sm-2 col-md-3 col-lg-2  col-form-label font-weight-bold pr-0"> Event Helpline</label>
+
+                                    <div class="col-sm-10 col-md-9 col-lg-10 ">
+                                        <div class="table-responsive">
+                                            <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>
+                                                            <div class="custom-checkbox custom-control custom-control-inline">
+                                                                <input checked id="event_mobile" name="event_mobile" class="custom-control-input" type="checkbox" value="2">
+                                                                <label class="custom-control-label w-100" for="degree_checkbox">Mobile No</label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="event_mobile_1" class="form-control shadow-sm" placeholder="First Mobile No" type="text" required>
+
+                                                            </div>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="event_mobile_1" class="form-control shadow-sm" placeholder="Second Mobile No" type="text" required>
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th>
+                                                            <div class="custom-checkbox custom-control custom-control-inline">
+                                                                <input checked id="event_email" name="event_email" class="custom-control-input" type="checkbox" value="1">
+                                                                <label class="custom-control-label w-100" for="degree_checkbox">Email Address</label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="event_email_1" class="form-control shadow-sm" placeholder="Please Enter Email Address" type="email">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th>
+                                                            <div class="custom-checkbox custom-control custom-control-inline">
+                                                                <input checked id="office_address" name="office_address" class="custom-control-input" type="checkbox" value="1">
+                                                                <label class="custom-control-label w-100" for="office_address"> Office Address</label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="office_address_1" class="form-control shadow-sm" placeholder="Please Enter Office Address" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Payment -->
+
+                            <div class="col-sm-12 col-md-6">
+
+
+                                <div class="position-relative row align-items-center form-group">
+                                    <label class="px-1 col-md-3 col-lg-2 col-form-label font-weight-bold pr-0"> Event Registration Payment</label>
+
+                                    <div class=" col-md-9 col-lg-10 ">
+                                        <div class="table-responsive">
+                                            <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Member Price</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="member_price" class="form-control shadow-sm" placeholder="500" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr class="d-none exist_spouse">
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Spouse Price</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="spouse_price" class="form-control shadow-sm" placeholder="500" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr class="d-none exist_kid">
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Kid Price</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="kid_price" class="form-control shadow-sm" placeholder="500" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr class="d-none exist_guest">
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Guest Price</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="guest_price" class="form-control shadow-sm" placeholder="500" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr class="d-none exist_driver">
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Driver Price</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="driver_price" class="form-control shadow-sm" placeholder="500" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-25">
+                            <div class="border border-dark"></div>
+                        </div>
+
+
+                        <!-- ///// Bank Account Details ///////// -->
+
+
+                        <div class="row justify-content-center align-items-center mt-4">
+                            <!-- Bank Account Details -->
+
+
+                            <div class="col-sm-12 col-md-6">
+                                <div class="position-relative row align-items-center form-group">
+                                    <label class="col-sm-2 col-md-3 col-lg-2  col-form-label font-weight-bold pr-0"> Bank Account Details</label>
+
+                                    <div class="col-sm-10 col-md-9 col-lg-10 ">
+                                        <div class="table-responsive">
+                                            <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Account Name</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Please Enter Account Name" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th>
+                                                            <label class="custom-control-label w-100" for="degree_checkbox">Account No</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Please Enter Account No" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th>
+                                                            <label class="custom-control-label w-100" for="degree_checkbox"> Branch Name</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Please Enter Branch Name" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            <label class="custom-control-label w-100" for="degree_checkbox">Routing Number</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Please Enter Routing Number" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Payment Another Method -->
+
+                            <div class="col-sm-12 col-md-6">
+
+                                <div class="position-relative row align-items-center form-group">
+                                    <label class="px-1 col-md-3 col-lg-2 col-form-label font-weight-bold pr-0"> Event Registration Payment Method</label>
+
+                                    <div class=" col-md-9 col-lg-10 ">
+                                        <div class="table-responsive">
+                                            <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>
+                                                            <label class="custom-control-label w-100">Bkash Number</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Bkash Number" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <!-- <tr class="d-none>
+                                                        <th>
+                                                            <label class=" custom-control-label w-100">Nagad Number</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Nagad Number" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr class="d-none>
+                                                        <th>
+                                                            <label class=" custom-control-label w-100">Rocket Number</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="Rocket Number" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr>
+                                                    <tr class="d-none>
+                                                        <th>
+                                                            <label class=" custom-control-label w-100">DBBL Number</label>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-control-inline">
+
+                                                                <input name="" class="form-control shadow-sm" placeholder="DBBL Number" type="text">
+
+                                                            </div>
+
+                                                        </th>
+
+                                                    </tr> -->
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- ///// Any Query ///// -->
+
+
+                            <div class="col-sm-12 col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table-sm table-bordered" style="border-collapse: separate;border-spacing: 0.1rem 0.75rem;">
+                                        <tbody>
+
+                                            <tr>
+                                                <th>
+                                                    <label class="custom-control-label w-100" for="hsc_checkbox">If You have Any Query Please Upload</label>
+                                                </th>
+                                                <th>
+                                                    <div class="" style="padding: 0;">
+                                                        <input id="query_1" name="query_1" class="form-control shadow-sm " type="file" placeholder="Type your name in english">
+                                                        <!-- <small class="text-danger font-weight-bold">PDF/JPG/PNG formatted maximum size 500KB </small> -->
+                                                    </div>
+                                                    <div class="" style="padding: 0;">
+                                                        <input id="query_2" name="query_2" class="form-control shadow-sm " type="file" placeholder="Type your name in english">
+                                                        <!-- <small class="text-danger font-weight-bold">PDF/JPG/PNG formatted maximum size 500KB </small> -->
+                                                    </div>
+                                                    <div class="" style="padding: 0;">
+                                                        <input id="query_3" name="query_3" class="form-control shadow-sm " type="file" placeholder="Type your name in english">
+                                                        <!-- <small class="text-danger font-weight-bold">PDF/JPG/PNG formatted maximum size 500KB </small> -->
+                                                    </div>
+                                                </th>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="d-print-none text-center my-3">
+                    <button type="submit" class="btn btn-primary font-weight-bold rounded-pill px-5 custom_shadow">Submit Registration Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ////////////// For Slider Image //////////// -->
+
+
+    <!-- //////////////// -->
+
+    <!-- /////// Modal ///// -->
+
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Please Select From Here</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <section>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-xl-6">
+
+                                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-indicators" style="bottom: -42px;">
+                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
+                                                <img src="./assets/image/event_image/Background-Image-in-HTML.jpg.crdownload" class="d-block w-100" alt="...">
+                                            </button>
+                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2">
+                                                <img src="./assets/image/event_image/sunset-1373171__480.jpg" class="d-block w-100" alt="...">
+                                            </button>
+                                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3">
+                                                <img src="./assets/image/event_image/tree-736885__340.jpg" class="d-block w-100" alt="...">
+                                            </button>
+                                        </div>
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                                <button data-bs-dismiss="modal" class="btn btn-outline-primary select_btn">Select This One</button>
+                                                <img src="./assets/image/event_image/Background-Image-in-HTML.jpg.crdownload" class="d-block w-100" alt="...">
+                                            </div>
+                                            <div class="carousel-item">
+                                                <button data-bs-dismiss="modal" class="btn btn-outline-primary select_btn">Select This One</button>
+                                                <img src="./assets/image/event_image/sunset-1373171__480.jpg" class="d-block w-100" alt="...">
+                                            </div>
+                                            <div class="carousel-item">
+                                                <button data-bs-dismiss="modal" class="btn btn-outline-primary select_btn">Select This One</button>
+                                                <img src="./assets/image/event_image/tree-736885__340.jpg" class="d-block w-100" alt="...">
+                                            </div>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- /////////////// -->
+
+
+
+
+    <?php include_once('photo_change_form_registration.php'); ?>
+    <script src="js/imagecrop_registration.js"></script>
+    <script src="js/numberToWords.js"></script>
+
+    <!-- My Script for Interactive I/O-->
+
+    <script>
+        //// For Confirmation Card Design ////
+
+        $(".select_btn").click(function(e) {
+            let image = $(this).next().attr("src");
+            $(".show_own_design").addClass("d-none");
+            $(".show_agami_design").removeClass("d-none");
+            $("#set_image").attr("src", image);
+            $("#own_card").prop('checked', false);
+            $("#set_image").data("agami_design_url", image);
+
+
+        });
+        $("#own_card").click(function() {
+            if ($("#own_card").prop('checked') == true) {
+                $(".show_own_design").removeClass("d-none");
+                $(".show_agami_design").addClass("d-none");
+            }
+            if ($("#own_card").prop('checked') == false) {
+                $(".show_own_design").addClass("d-none");
+                $(".show_agami_design").addClass("d-none");
+            }
+        });
+
+        //// For Name Input Type ////
+
+
+        $("#user_name").click(function(e) {
+            if ($("#user_name").prop('checked') == true) {
+                $("#user_name_method_bn").removeAttr("disabled");
+                $("#user_name_method_en").removeAttr("disabled");
+                $("#user_name_method_both").removeAttr("disabled");
+            }
+            if ($("#user_name").prop('checked') == false) {
+                $("#user_name_method_bn").attr("disabled", true);
+                $("#user_name_method_en").attr("disabled", true);
+                $("#user_name_method_both").attr("disabled", true);
+                $("#user_name_method_bn").prop('checked', false);
+                $("#user_name_method_en").prop('checked', false);
+                $("#user_name_method_both").prop('checked', false);
+            }
+        });
+
+        //// For Input Contact Address ////
+
+
+        $("#contact_address").click(function(e) {
+            if ($("#contact_address").prop('checked') == true) {
+                $("#contact_address_bn").removeAttr("disabled");
+                $("#contact_address_en").removeAttr("disabled");
+                $("#contact_address_both").removeAttr("disabled");
+            }
+            if ($("#contact_address").prop('checked') == false) {
+                $("#contact_address_bn").attr("disabled", true);
+                $("#contact_address_en").attr("disabled", true);
+                $("#contact_address_both").attr("disabled", true);
+                $("#contact_address_bn").prop('checked', false);
+                $("#contact_address_en").prop('checked', false);
+                $("#contact_address_both").prop('checked', false);
+            }
+        });
+
+        //// For Professional Information ////
+
+        $("#profession").click(function(e) {
+            if ($("#profession").prop('checked') == true) {
+                $("#profession_detail_profession").removeAttr("disabled");
+                $("#profession_detail_designation").removeAttr("disabled");
+                $("#profession_detail_organization").removeAttr("disabled");
+            }
+            if ($("#profession").prop('checked') == false) {
+                $("#profession_detail_profession").attr("disabled", true);
+                $("#profession_detail_designation").attr("disabled", true);
+                $("#profession_detail_organization").attr("disabled", true);
+                $("#profession_detail_profession").prop('checked', false);
+                $("#profession_detail_designation").prop('checked', false);
+                $("#profession_detail_organization").prop('checked', false);
+            }
+        });
+
+        //// For Educational Information ////
+
+        $("#education").click(function(e) {
+            if ($("#education").prop('checked') == true) {
+                $("#education_jsc").removeAttr("disabled");
+                $("#education_ssc").removeAttr("disabled");
+                $("#education_hsc").removeAttr("disabled");
+                $("#education_hons").removeAttr("disabled");
+                $("#education_master").removeAttr("disabled");
+            }
+            if ($("#education").prop('checked') == false) {
+                $("#education_jsc").attr("disabled", true);
+                $("#education_ssc").attr("disabled", true);
+                $("#education_hsc").attr("disabled", true);
+                $("#education_hons").attr("disabled", true);
+                $("#education_master").attr("disabled", true);
+
+                $("#education_jsc").prop('checked', false);
+                $("#education_ssc").prop('checked', false);
+                $("#education_hsc").prop('checked', false);
+                $("#education_hons").prop('checked', false);
+                $("#education_master").prop('checked', false);
+
+            }
+        });
+
+        //// For Identity Information ////
+
+        $("#identity").click(function(e) {
+            if ($("#identity").prop('checked') == true) {
+                $("#identity_nid").removeAttr("disabled");
+                $("#identity_passport").removeAttr("disabled");
+                $("#identity_birth").removeAttr("disabled");
+
+            }
+            if ($("#identity").prop('checked') == false) {
+                $("#identity_nid").attr("disabled", true);
+                $("#identity_passport").attr("disabled", true);
+                $("#identity_birth").attr("disabled", true);
+
+
+                $("#identity_nid").prop('checked', false);
+                $("#identity_passport").prop('checked', false);
+                $("#identity_birth").prop('checked', false);
+
+
+            }
+        });
+
+        //// For Attend Member Information ////
+
+        $("#attend").click(function(e) {
+            if ($("#attend").prop('checked') == true) {
+                $("#attend_spouse").removeAttr("disabled");
+                $("#attend_kid").removeAttr("disabled");
+                $("#attend_driver").removeAttr("disabled");
+                $("#attend_guest").removeAttr("disabled");
+
+            }
+            if ($("#attend").prop('checked') == false) {
+                $("#attend_spouse").attr("disabled", true);
+                $("#attend_kid").attr("disabled", true);
+                $("#attend_driver").attr("disabled", true);
+                $("#attend_guest").attr("disabled", true);
+
+
+                $("#attend_spouse").prop('checked', false);
+                $("#attend_kid").prop('checked', false);
+                $("#attend_driver").prop('checked', false);
+                $("#attend_guest").prop('checked', false);
+
+
+                //// for Payment
+                $(".exist_driver").addClass("d-none");
+                $(".exist_spouse").addClass("d-none");
+                $(".exist_kid").addClass("d-none");
+                $(".exist_guest").addClass("d-none");
+
+            }
+
+        });
+
+        //// For Confirmation Card Design ////
+
+        $("#card_design").click(function(e) {
+            if ($("#card_design").prop('checked') == true) {
+                $("#choose_card").removeClass("d-none");
+                $("#own_card").removeAttr("disabled");
+
+
+            }
+            if ($("#card_design").prop('checked') == false) {
+                $("#choose_card").addClass("d-none");
+                $("#own_card").attr("disabled", true);
+
+                $("#own_card").prop('checked', false);
+                $(".show_agami_design").addClass("d-none");
+                $(".show_own_design").addClass("d-none");
+
+
+
+            }
+        });
+
+        //// For Event Registration Payment Method ////
+
+        $("#event_payment").click(function(e) {
+            if ($("#event_payment").prop('checked') == true) {
+                $("#payment_bkash").removeAttr("disabled");
+                $("#payment_rocket").removeAttr("disabled");
+                $("#payment_dbbl").removeAttr("disabled");
+                $("#payment_nagad").removeAttr("disabled");
+                $("#payment_bank").removeAttr("disabled");
+
+            }
+            if ($("#event_payment").prop('checked') == false) {
+                $("#payment_bkash").attr("disabled", true);
+                $("#payment_rocket").attr("disabled", true);
+                $("#payment_dbbl").attr("disabled", true);
+                $("#payment_nagad").attr("disabled", true);
+                $("#payment_bank").attr("disabled", true);
+
+
+                $("#payment_bkash").prop('checked', false);
+                $("#payment_rocket").prop('checked', false);
+                $("#payment_dbbl").prop('checked', false);
+                $("#payment_nagad").prop('checked', false);
+                $("#payment_bank").prop('checked', false);
+
+
+            }
+        });
+
+        /// For Interactive Attend Person Payment ///
+        $("#attend_spouse").click(function(e) {
+            if ($("#attend_spouse").prop('checked') == true) {
+                $(".exist_spouse").removeClass("d-none");
+            }
+            if ($("#attend_spouse").prop('checked') == false) {
+                $(".exist_spouse").addClass("d-none");
+            }
+        });
+        $("#attend_kid").click(function(e) {
+            if ($("#attend_kid").prop('checked') == true) {
+                $(".exist_kid").removeClass("d-none");
+            }
+            if ($("#attend_kid").prop('checked') == false) {
+                $(".exist_kid").addClass("d-none");
+            }
+        });
+        $("#attend_driver").click(function(e) {
+            if ($("#attend_driver").prop('checked') == true) {
+                $(".exist_driver").removeClass("d-none");
+            }
+            if ($("#attend_driver").prop('checked') == false) {
+                $(".exist_driver").addClass("d-none");
+            }
+        });
+        $("#attend_guest").click(function(e) {
+            if ($("#attend_guest").prop('checked') == true) {
+                $(".exist_guest").removeClass("d-none");
+            }
+            if ($("#attend_guest").prop('checked') == false) {
+                $(".exist_guest").addClass("d-none");
+            }
+        });
+    </script>
+
+    <!-- My Script for File Upload-->
+
+    <script>
+        $(document).ready(function() {
+
+            function is_file_size_valid(files, maxSize = 512000) {
+                if (files && files.length && files[0].size <= maxSize) {
+                    return true;
+                } else {
+                    toastr.error(`${files && files.length ? files[0].name : ``} ফাইলটি PDF/JPG/PNG ফরমেটে সর্বোচ্চ ৫০০KB সাইজের মধ্যে হতে হবে।${files && files.length ? ` আপনার ফাইলটি ${(files[0].size / 1024).toFixed(2)}KB।` : ``}`)
+                    return false;
+                }
+            }
+
+
+
+            ///  Own card Upload ///
+            $(`#event_application_form [name="card_design"]`).change(function(e) {
+                console.log(this.files);
+                let isValid = is_file_size_valid(this.files);
+                if (!isValid) {
+                    return;
+                }
+                // let signaturefilename = $(`#adm_form_page_fourth [name="guardian_signatureurl"]`).val(this.files[0].name);
+                (upload_file_in_server(this.files[0], "files/own_card/")).then(
+                    response => {
+                        console.log("file upload response", response);
+                        toastr.success("File is successfully uploaded");
+                        // signaturefilename.removeClass(`is-invalid`).addClass(`is-valid`);
+                        $(`#event_application_form [name="card_design"]`).data({
+                            response
+                        });
+                    },
+                    error => {
+                        toastr.error(error);
+                        // signaturefilename.removeClass(`is-valid`).addClass(`is-invalid`);
+                    }
+                );
+            });
+            ///  First Query Upload ///
+            $(`#event_application_form [name="query_1"]`).change(function(e) {
+                console.log(this.files);
+                let isValid = is_file_size_valid(this.files);
+                if (!isValid) {
+                    return;
+                }
+                // let signaturefilename = $(`#adm_form_page_fourth [name="guardian_signatureurl"]`).val(this.files[0].name);
+                (upload_file_in_server(this.files[0], "files/query/")).then(
+                    response => {
+                        console.log("file upload response", response);
+                        toastr.success("File is successfully uploaded");
+                        // signaturefilename.removeClass(`is-invalid`).addClass(`is-valid`);
+                        $(`#event_application_form [name="query_1"]`).data({
+                            response
+                        });
+                    },
+                    error => {
+                        toastr.error(error);
+                        // signaturefilename.removeClass(`is-valid`).addClass(`is-invalid`);
+                    }
+                );
+            });
+            ///  Second Query Upload ///
+            $(`#event_application_form [name="query_2"]`).change(function(e) {
+                console.log(this.files);
+                let isValid = is_file_size_valid(this.files);
+                if (!isValid) {
+                    return;
+                }
+                // let signaturefilename = $(`#adm_form_page_fourth [name="guardian_signatureurl"]`).val(this.files[0].name);
+                (upload_file_in_server(this.files[0], "files/query/")).then(
+                    response => {
+                        console.log("file upload response", response);
+                        toastr.success("File is successfully uploaded");
+                        // signaturefilename.removeClass(`is-invalid`).addClass(`is-valid`);
+                        $(`#event_application_form [name="query_2"]`).data({
+                            response
+                        });
+                    },
+                    error => {
+                        toastr.error(error);
+                        // signaturefilename.removeClass(`is-valid`).addClass(`is-invalid`);
+                    }
+                );
+            });
+            ///  Third Query Upload ///
+            $(`#event_application_form [name="query_3"]`).change(function(e) {
+                console.log(this.files);
+                let isValid = is_file_size_valid(this.files);
+                if (!isValid) {
+                    return;
+                }
+                // let signaturefilename = $(`#adm_form_page_fourth [name="guardian_signatureurl"]`).val(this.files[0].name);
+                (upload_file_in_server(this.files[0], "files/query/")).then(
+                    response => {
+                        // console.log("file upload response", response);
+                        // signaturefilename.removeClass(`is-invalid`).addClass(`is-valid`);
+                        toastr.success("File is successfully uploaded");
+                        $(`#event_application_form [name="query_3"]`).data({
+                            response
+                        });
+                    },
+                    error => {
+                        toastr.error(error);
+                        // signaturefilename.removeClass(`is-valid`).addClass(`is-invalid`);
+                    }
+                );
+            });
+        })
+    </script>
+
+    <!-- My Script for Submit Form -->
+
+    <script>
+        $(document).ready(function() {
+            $(`#event_application_form`).submit(function(e) {
+
+                e.preventDefault();
+
+                let json = {};
+                let sent_json = {};
+
+
+                //// manage all file input ///
+
+                let own_card_design_url = "";
+                let agami_card_design_url = "";
+
+                if ($("#own_card").prop('checked') == false && $("#card_design").prop('checked') == true) {
+                    agami_card_design_url = $("#set_image").data("agami_design_url");
+                }
+                if ($("#own_card").prop('checked') == true && $("#card_design").prop('checked') == true) {
+                    own_card_design_url = $(`[name="card_design"]`, this).data("response").fileurl;
+                }
+
+
+
+                let query = {};
+                query.query_1 = $(`[name="query_1"]`, this).data("response").fileurl;
+                query.query_2 = $(`[name="query_2"]`, this).data("response").fileurl;
+                query.query_3 = $(`[name="query_3"]`, this).data("response").fileurl;
+
+                //////////////////
+
+                /// Manage All Checked Box Input ////////
+
+
+                ///name
+
+                let reg_name_method = [];
+                $.each($("input[name='user_name_method']:checked"), function() {
+                    reg_name_method.push($(this).val());
+                });
+
+                ///contact_address_method
+
+                let contact_address = [];
+                $.each($("input[name='contact_address_method']:checked"), function() {
+                    contact_address.push($(this).val());
+                });
+
+                ///profession_detail
+
+                let profession_detail = [];
+                $.each($("input[name='profession_detail']:checked"), function() {
+                    profession_detail.push($(this).val());
+                });
+
+                ///education_detail
+
+                let education_detail = [];
+                $.each($("input[name='education_detail']:checked"), function() {
+                    education_detail.push($(this).val());
+                });
+
+                ///identity_detial
+
+                let identity_detial = [];
+                $.each($("input[name='identity_detial']:checked"), function() {
+                    identity_detial.push($(this).val());
+                });
+
+                ///attend_detail
+
+                let attend_detail = [];
+                $.each($("input[name='attend_detail']:checked"), function() {
+                    attend_detail.push($(this).val());
+                });
+
+                ///payment_method
+
+                let payment_method = [];
+                $.each($("input[name='payment_method']:checked"), function() {
+                    payment_method.push($(this).val());
+                });
+
+                ///single_input
+
+                let single_input = [];
+                $.each($("input[name='single_input']:checked"), function() {
+                    single_input.push($(this).val());
+                });
+
+
+
+
+                sent_json.input_name = reg_name_method;
+                sent_json.own_card_design_url = own_card_design_url;
+                sent_json.agami_card_design_url = agami_card_design_url;
+                sent_json.query = query;
+                console.log(sent_json);
+
+
+
+                let all_inputs = $(`#event_application_form`).find(':input');
+
+                $(all_inputs).each(function(index, elm) {
+                    json[$(elm).prop('name')] = $(elm).val();
+                });
+
+                console.log(`json =>`, json);
+
+            })
+        })
+    </script>
+
+    <!-- //////// -->
+
+    <script>
+        let headgroupkey = `<?= $headgroupkey ?>`;
+        console.log(`headgroupkey =>`, headgroupkey);
+
+
+        if (headgroupkey == `self`) {
+            $(`#is_alumni_yes_checkbox`).prop(`checked`, true);
+            $(`#is_alumni_no_checkbox`).prop(`checked`, false);
+
+            $(`.is_alumni_no_content`).hide();
+            $(`.is_alumni_yes_content`).show();
+        } else if (headgroupkey == `current_std`) {
+            $(`#is_alumni_yes_checkbox`).prop(`checked`, false);
+            $(`#is_alumni_no_checkbox`).prop(`checked`, true);
+
+            $(`.is_alumni_yes_content`).hide();
+            $(`.is_alumni_no_content`).show();
+        } else {
+            $(`#is_alumni_yes_checkbox`).prop(`checked`, false);
+            $(`#is_alumni_no_checkbox`).prop(`checked`, false);
+
+            $(`.is_alumni_yes_content`).hide();
+            $(`.is_alumni_no_content`).hide();
+        }
+
+        document.getElementsByClassName('loading_overlay')[0].style.display = 'block';
+        $(document).ready(function() {
+            document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+        });
+
+        // var departments = // json_encode($deptArray);
+
+        // loadDepartments();
+
+        function loadDepartments() {
+            let select = $(`[name="deptid"]`).empty().append(new Option(`Select any...`, ``));
+
+            $.each(departments, (index, value) => {
+                select.append(new Option(value.depttitle, value.deptid));
+            });
+        }
+
+        function validateSession(session) {
+            if (session.length != 9) {
+
+                toastr.error("Invalid Session");
+                return false;
+            }
+            var sessionArray = session.split('-');
+            if (sessionArray.length != 2) {
+                toastr.error("Invalid Session");
+                return false;
+            }
+
+            if (sessionArray[0] < 0 || sessionArray[1] < 0) {
+                toastr.error("Invalid Session");
+                return false;
+            }
+
+            return true;
+        }
+
+        $(`[name="batch_prefix"]`).on("input", function(e) {
+
+            let batchRow = $(`[name="batch"]`).closest(`tr`);
+            let sessionRow = $(`[name="session"]`).closest(`tr`);
+
+            if ($(this).val() > 4) {
+                $(`[name="batch"]`).val(0);
+                $(`[name="session"]`).val("");
+                batchRow.hide();
+                sessionRow.show();
+            } else {
+                $(`[name="batch"]`).val("");
+                $(`[name="session"]`).val("");
+                batchRow.show();
+                sessionRow.hide();
+            }
+
+
+        });
+
+        // $(`[name="session"]`).on("input", function() {
+        //     let session = $(this).val()?.trim();
+        //     if (session.length == 9) {
+        //         var admissionYear = session.substring(5);
+        //         var batch = Number(admissionYear) - 1966;
+        //         $(`[name="batch"]`).val(batch);
+        //     }
+        // });
+
+        $(`#educational_info_add_button`).click(function(e) {
+            add_educational_info();
+        });
+
+        function add_educational_info(data) {
+            let templateLiterals = $(`<div class="position-relative border border-dark rounded px-3 py-2 mt-2">
+                    <div class="position-absolute" style="top:-10px;right:-10px;">
+                        <button class="delete_button btn btn-sm btn-danger rounded-circle custom_shadow p-2 m-1" type="button" title="বাতিল করুন">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex my-3">
+                        <div style="width: 100px;">ডিগ্রি</div>
+                        <select name="dno" class="form-control shadow-sm" required="">
+                            <option value="">বাছাই করুন</option>
+                            <option value="1">B.Com</option>
+                            <option value="2">BBA</option>
+                            <option value="3">M.Com</option>
+                            <option value="4">MBA</option>
+                            <option value="5">MPhil</option>
+                            <option value="6">Ph.D</option>
+                        </select>
+                    </div>
+                </div>`)
+                .appendTo(`#educational_info_container`);
+
+            (function($) {
+                $(`.delete_button`, templateLiterals).click(function(e) {
+                    if (confirm(`Are you sure?`)) {
+                        templateLiterals.remove();
+                    }
+                });
+            })(jQuery);
+        }
+
+        $(`#professional_info_add_button`).click(function(e) {
+            let templateLiterals = $(`<div class="position-relative border border-dark rounded px-3 py-2 mt-2">
+                    <div class="position-absolute" style="top:-10px;right:-10px;">
+                        <button class="delete_button btn btn-sm btn-danger rounded-circle custom_shadow p-2 m-1" type="button" title="বাতিল করুন">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex my-3">
+                        <div style="width: 150px;">Profession *</div>
+                        <input name="profession" class="form-control shadow-sm" type="text" placeholder="Type your Profession here..." required>
+                    </div>
+                    <div class="d-flex my-3">
+                        <div style="width: 150px;">পদবী</div>
+                        <input name="designation" class="form-control shadow-sm" type="text" placeholder="পদবী" required="">
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div style="width: 150px;">প্রতিষ্ঠানের নাম</div>
+                        <input name="orgname" class="form-control shadow-sm" type="text" placeholder="প্রতিষ্ঠানের নাম" required="">
+                    </div>
+                </div>`)
+                .appendTo(`#professional_info_container`);
+
+            (function($) {
+                $(`.delete_button`, templateLiterals).click(function(e) {
+                    if (confirm(`Are you sure?`)) {
+                        templateLiterals.remove();
+                    }
+                });
+            })(jQuery);
+        });
+
+        // $(`#event_registration_form [name="phone"]`).on("input", function(e) {
+        //     if (this.value.length == 11) {
+        //         get_personal_info();
+        //     }
+        // });
+
+        $(`#check_status_button`).click(() => get_personal_info());
+
+        function get_personal_info() {
+
+            let phone = getPhoneNumber();
+
+            if (!phone) {
+                return;
+            }
+            let json = {
+                // phone: $(`#event_registration_form [name="phone"]`).val()
+                phone: phone,
+                eventno: 1
+            };
+
+            document.getElementsByClassName('loading_overlay')[0].style.display = 'block';
+
+            $.post(`php/ui/public_event/get_personal_info.php`, json, resp => {
+                if (resp.error) {
+                    toastr.error(resp.message);
+                } else {
+                    location.href = "registration_verification.php?phone=" + resp.data.phone;
+                    // show_personal_info(resp.data);
+                }
+                setTimeout(() => {
+                    document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+                }, 100);
+
+            }, "json").fail((response) => {
+                document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+                toastr.error(response.responseText);
+            });
+        }
+
+        function show_personal_info(data) {
+            $(`#event_application_form`).trigger("reset");
+
+            $(`#people_photo`).prop("src", data.photo_url);
+            $(`#people_photo`).data("photo_url", data.photo_url);
+
+            // let date = data.aca_period_from.split("");
+
+            // $(`#event_registration_form [name="aca_period_from_year_1"]`).val(date[0]);
+            // $(`#event_registration_form [name="aca_period_from_year_2"]`).val(date[1]);
+            // $(`#event_registration_form [name="aca_period_from_year_3"]`).val(date[2]);
+            // $(`#event_registration_form [name="aca_period_from_year_4"]`).val(date[3]);
+
+            // date = data.aca_period_to.split("");
+
+            // $(`#event_registration_form [name="aca_period_to_year_1"]`).val(date[0]);
+            // $(`#event_registration_form [name="aca_period_to_year_2"]`).val(date[1]);
+            // $(`#event_registration_form [name="aca_period_to_year_3"]`).val(date[2]);
+            // $(`#event_registration_form [name="aca_period_to_year_4"]`).val(date[3]);
+
+            $(`#event_registration_form [name="title"]`).val(data.title);
+            $(`#event_registration_form [name="name_en"]`).val(data.name_en || ``);
+            $(`#event_registration_form [name="name_bn"]`).val(data.name_bn || ``);
+
+            if (data.name_en && data.name_en.length) {
+                $(`#event_registration_form [name="name_en"]`).closest("tr").show();
+            }
+
+            setPhoneNumber(data.phone);
+
+            $(`#event_registration_form [name="email"]`).val(data.email);
+            $(`#event_registration_form [name="blood_group"]`).val(data.blood_group);
+            $(`#event_registration_form [name="session"]`).val(data.session);
+
+            $(`#event_registration_form [name="batch_prefix"]:not([value="${data.batch_prefix}"])`).prop("checked", false);
+            $(`#event_registration_form [name="batch_prefix"][value="${data.batch_prefix}"]`).prop("checked", true);
+
+            $(`#event_registration_form [name="batch"]`).val(data.batch);
+
+            let spouse = data.event.invitee.filter(a => a.headno == 2).length || 0;
+            let child = data.event.invitee.filter(a => a.headno == 3).length || 0;
+            let guest = data.event.invitee.filter(a => a.headno == 4).length || 0;
+
+            $(`#event_registration_form [name="spouse"]`).val(spouse);
+            $(`#event_registration_form [name="child"]`).val(child);
+            $(`#event_registration_form [name="guest"]`).val(guest);
+            let total_amount = calculate_amount();
+
+            $(`#event_registration_form [name="department"]`).val(data.department);
+            $(`#event_registration_form [name="pr_address"]`).val(data.pr_address);
+            $(`#event_registration_form [name="home_address"]`).val(data.home_address);
+
+            $.each(data.education, (index, value) => {
+                if (!$(`#enable_deptid_${value.dno}`).prop("checked")) {
+                    $(`#enable_deptid_${value.dno}`).prop("checked", true);
+                }
+                $(`#event_registration_form [name="deptid_${value.dno}"][value="${value.deptid}"]`).prop("checked", true);
+            });
+
+            $.each(data.speciality, (index, value) => {
+                $(`#event_registration_form [name="special_qualification"][value="${value.specialityno}"]`).prop("checked", true);
+            });
+
+            if (data.event && data.event.hasOwnProperty("ispaid")) {
+                $(`#event_registration_form [name="name_en"],#event_registration_form [name="department"], #event_registration_form [name="birth_place"], #event_registration_form [name="profession"], #event_registration_form [name="jobtitle"]`).each((index, elem) => {
+                    $(elem).val(data[$(elem).attr("name")]).prop("disabled", true);
+                });
+
+                $('#pay_now_button').data("eregno", data.event.eregno);
+
+                $(`#response_modal`).modal("show");
+
+                if (data.event.ispaid == 0) {
+                    $('#message_container').hide();
+                    $('#payment_container').show();
+
+                    $('#registrant_info').html(`
+                            Name: <b>${data.name_en}</b><br/>
+                            Mobile: <b>${data.phone}</b><br/>
+                            Total Fee: <b>${(data.event.amount || 0)}</b>
+                        `);
+
+                    $('#registrant_photo').attr('src', data.photo_url);
+                    $('#payment_notice').html(data.event.message);
+                    $('.pay_next').text('পেমেন্ট পরবর্তীতে করুন').prop('href', 'index.php');
+                } else {
+                    $('#message_container').show();
+                    $('#payment_container').hide();
+
+                    $('#message_notice').html(data.event.message);
+                    $(`#invitation_button`).prop("href", data.event.invitation_url);
+                    $('.pay_next').text('ডাউনলোড করা হয়েছে').prop('href', 'index.php');
+                }
+            }
+        }
+
+        $(`#event_registration_form [name="spouse"], #event_registration_form [name="child"], #event_registration_form [name="guest"]`).change(function(e) {
+            calculate_amount();
+        });
+
+        function calculate_amount() {
+            let spouse = Number($(`#event_registration_form [name="spouse"]`).val()) || 0;
+            let child = Number($(`#event_registration_form [name="child"]`).val()) || 0;
+            let guest = Number($(`#event_registration_form [name="guest"]`).val()) || 0;
+            let totalPeople = spouse + child + guest + 1;
+            let totalAmount = (spouse * 500) + (child * 300) + (guest * 700) + 1000;
+
+            // $(`#total_people`).html(EN_NumberTo_BN(totalPeople.toString().padStart(2, 0)));
+            // $(`#total_amount`).html(`৳ ${EN_NumberTo_BN(totalAmount)} /-`);
+            $(`#total_people`).html((totalPeople.toString().padStart(2, 0)));
+            $(`#total_amount`).html(`৳ ${(totalAmount)} /-`);
+
+            $(`#total_amount_in_word`).html(`TK ` + currencyInWords(totalAmount));
+
+            // if (totalPeople > 1) {
+            //     $(`#invitee_row`).show();
+
+            //     $(`#invitee_tbody`).empty();
+            // } else {
+            //     $(`#invitee_row`).hide();
+            // }
+
+            return totalAmount;
+        }
+
+        function scrollToElem(elem) {
+            let elementPos = $(elem).offset().top || 0;
+
+            $(`body,html`).animate({
+                scrollTop: elementPos - 170
+            }, elementPos - 170);
+        }
+
+        // $(`#setup_invitee_data_modal`).modal("show");
+
+        function upload_invitee_data(invitees) {
+            return new Promise(function(resolve, reject) {
+                let modal = $(`#setup_invitee_data_modal`);
+                modal.modal("show");
+
+
+
+                $(`form`, modal).submit(function(e) {
+                    e.preventDefault();
+                    let json = Object.fromEntries((new FormData(this)).entries());
+                    console.log(` JSON =>`, json);
+
+                });
+
+                modal.on("hidden.bs.modal", function(e) {
+                    reject();
+                });
+            });
+        }
+
+        // $(`#event_application_form`).submit(function(e) {
+        //     e.preventDefault();
+
+        //     let response = $(`#profile_pic_modal`).data("profilepic");
+        //     let photo_url = "";
+
+        //     if (response) {
+        //         photo_url = response.fileurl || "";
+        //     } else if ($(`#people_photo`).data("photo_url")) {
+        //         photo_url = $(`#people_photo`).data("photo_url");
+        //     } else {
+
+        //         // if (!confirm("Are you sure to proceed without photo?")) {
+        //         //     scrollToElem(`#people_photo`);
+        //         //     return;
+        //         // }
+
+        //         photo_url = "";
+        //         toastr.error(`আপনার ছবি দিন!`);
+        //         scrollToElem(`#people_photo`);
+        //         return;
+        //     }
+
+        //     let json = {};
+
+        //     let all_inputs = $(`#event_registration_form`).find(':input');
+
+        //     $(all_inputs).each(function(index, elm) {
+        //         json[$(elm).prop('name')] = $(elm).val();
+        //     });
+
+        //     // console.log(`json =>`, json);
+
+        //     let phone = json.phone;
+
+        //     if (phone.length != 11) {
+        //         toastr.warning('১১ সংখ্যার মোবাইল নম্বর সঠিকভাবে দিন');
+        //         return;
+        //     }
+
+        //     if (!phone.startsWith("01")) {
+        //         toastr.warning('১১ সংখ্যার মোবাইল নম্বর 01 দিয়ে শুরু হতে হবে সঠিকভাবে দিন');
+        //         return;
+        //     }
+
+        //     if (photo_url.length) {
+        //         json.photo_url = photo_url;
+        //     }
+
+        //     json.name_en = json.name_en.toUpperCase();
+
+        //     // let aca_period_from = json.aca_period_from_year_1 + "" + json.aca_period_from_year_2 + "" + json.aca_period_from_year_3 + "" + json.aca_period_from_year_4;
+        //     // let aca_period_to = json.aca_period_to_year_1 + "" + json.aca_period_to_year_2 + "" + json.aca_period_to_year_3 + "" + json.aca_period_to_year_4;
+
+        //     // aca_period_from = Number(aca_period_from);
+        //     // aca_period_to = Number(aca_period_to);
+
+        //     // if (aca_period_from < 1869) {
+        //     //     toastr.warning('অধ্যয়ন কালের শুরুর সাল সঠিকভাবে দিন');
+        //     //     return;
+        //     // }
+
+        //     // let this_year = `<?= date('Y'); ?>`;
+        //     // if (aca_period_to > this_year) {
+        //     //     toastr.warning('অধ্যয়ন কালের সমাপ্তির সাল সঠিকভাবে দিন');
+        //     //     return;
+        //     // }
+
+        //     // if (aca_period_from >= aca_period_to) {
+        //     //     toastr.warning('অধ্যয়ন কালের শুরু ও সমাপ্তির সাল সঠিকভাবে দিন');
+        //     //     return;
+        //     // }
+
+        //     let isInvalid = false;
+        //     let session = $(`#event_registration_form [name="session"]`).val();
+        //     // let session = "";
+        //     // isInvalid = !validateSession(session); // here validateSession function return isValid
+
+        //     // if (isInvalid) {
+        //     //     return;
+        //     // }
+
+        //     // json.aca_period_from = session.split("-")[0];
+        //     // json.aca_period_to = session.split("-")[1];
+
+        //     json.aca_period_from = "";
+        //     json.aca_period_to = "";
+
+        //     json.batch_prefix = $(`[name="batch_prefix"]`).val();
+        //     // if (!json.batch_prefix || json.batch_prefix <= 0) {
+        //     //     toastr.error(`ডিগ্রি নির্বাচন করুন।`);
+        //     //     return;
+        //     // }
+
+        //     // if (json.batch_prefix > 4) {
+        //     //     if (!json.session.length) {
+        //     //         toastr.error(`ব্যাচ ইংরেজীতে লিখতে হবে।`);
+        //     //         return;
+        //     //     }
+        //     // } else {
+        //     //     if (!json.batch.length) {
+        //     //         toastr.error(`সেশন ইংরেজীতে লিখতে হবে।`);
+        //     //         return;
+        //     //     }
+        //     // }
+
+        //     json.deg_complete = Number($(`[name="deg_complete"]:checked`).val()) || 0;
+        //     json.permanent_member_interest = Number($(`[name="permanent_member"]:checked`).val()) || 0;
+
+        //     json.education = [{
+        //         dno: ``,
+        //         deptid: json.deptid,
+        //         batch: ``,
+        //         passyear: json.passyear || 0,
+        //         institute: json.institute,
+        //         aca_session: ``,
+        //         credit_transferred: $(`[name="credit_transferred"]:checked`).val(),
+        //         deg_complete: json.deg_complete,
+        //         stdid: json.stdid
+        //     }];
+
+        //     if (json.deg_complete == 0 && !$(`[name="credit_transferred"]:checked`).length) {
+        //         toastr.error(`Select credit transferred.`);
+        //         return;
+        //     }
+
+        //     // let currentYear = <?= date("Y"); ?>;
+
+        //     // $(`#educational_info_container`).children().each((index, elem) => {
+        //     //     let dno = Number($(`[name="dno"]`, elem).val());
+        //     //     let institute = $(`[name="institute"]`, elem).val();
+        //     //     let aca_session = ""; //$(`[name="aca_session"]`, elem).val();
+        //     //     let passyear = ""; //Number($(`[name="passyear"]`, elem).val());
+
+        //     //     // if (aca_session.length) {
+        //     //     //     if (dno > 0 && validateSession(aca_session) && passyear > 1966 && passyear <= currentYear) {
+        //     //     //     }
+        //     //     // }
+        //     //     if (institute.length > 0) {
+        //     //         json.education = [...json.education, {
+        //     //             dno,
+        //     //             institute,
+        //     //             aca_session,
+        //     //             passyear
+        //     //         }];
+        //     //     }
+        //     // });
+
+        //     if (!json.education.length) {
+        //         toastr.error(`Please select at least one degree from the department`);
+        //         return;
+        //     }
+
+        //     json.professions = [];
+
+        //     $(`#professional_info_container`).children().each((index, elem) => {
+        //         let profession = $(`[name="profession"]`, elem).val();
+        //         let designation = $(`[name="designation"]`, elem).val();
+        //         let orgname = $(`[name="orgname"]`, elem).val();
+        //         // let start_year_month = $(`[name="start_year_month"]`, elem).val();
+        //         // let end_year_month = $(`[name="end_year_month"]`, elem).val();
+        //         // let isrunning = $(`[name="isrunning"]`, elem).prop("checked");
+
+        //         if (profession.length || designation.length || orgname.length) { //  && start_year_month.length
+        //             // if (!end_year_month.length && !isrunning) {
+        //             //     isInvalid = true;
+        //             //     toastr.warning("অনুগ্রহ করে শেষের সময়কাল প্রদান করুন অথবা 'বর্তমানে কর্মরত' চেকবক্সে টিক দিন");
+        //             //     $(elem).find(`[name="end_year_month"]`).focus();
+        //             //     return;
+        //             // }
+
+        //             // let [startyear, startmonth] = start_year_month?.split("-") || "";
+        //             // let [endyear, endmonth] = end_year_month?.split("-") || "";
+
+        //             json.professions = [...json.professions, {
+        //                 profession,
+        //                 designation,
+        //                 orgname,
+        //                 startyear: "",
+        //                 startmonth: "",
+        //                 endyear: "",
+        //                 endmonth: ""
+        //             }];
+        //         }
+        //     });
+
+        //     if (isInvalid) {
+        //         return;
+        //     }
+
+        //     json.speciality = [];
+
+        //     $(`#event_registration_form [name="special_qualification"]:checked`).each((index, elem) => {
+        //         json.speciality = [...json.speciality, $(elem).val()];
+        //     });
+
+
+        //     if ($(`#is_alumni_yes_checkbox`).prop("checked")) {
+        //         json.self = 1;
+        //         json.tshirtsize = $(`#event_registration_form [name="tshirtsize"]:checked`).val();
+        //         json.spouse = $(`#event_registration_form [name="spouse"]`).val();
+        //         json.child = $(`#event_registration_form [name="child"]`).val();
+        //         json.guest = $(`#event_registration_form [name="guest"]`).val();
+        //         // json.driver = $(`#event_registration_form [name="driver"]`).val();
+
+        //     } else if ($(`#is_alumni_no_checkbox`).prop("checked")) {
+        //         json.current_std = 1;
+        //         json.tshirtsize = $(`#event_registration_form [name="tshirtsize"]:checked`).val();
+        //     } else {
+        //         toastr.error("আপনি প্রাক্তন শিক্ষার্থী নাকি বর্তমান শিক্ষার্থী তা নির্বাচন করুন!");
+        //         document.getElementById('is_alumni_yes_checkbox').focus();
+        //         document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+        //         return;
+        //     }
+
+
+        //     delete json.image;
+
+        //     // delete json.aca_period_from_year_1;
+        //     // delete json.aca_period_from_year_2;
+        //     // delete json.aca_period_from_year_3;
+        //     // delete json.aca_period_from_year_4;
+
+        //     // delete json.aca_period_to_year_1;
+        //     // delete json.aca_period_to_year_2;
+        //     // delete json.aca_period_to_year_3;
+        //     // delete json.aca_period_to_year_4;
+
+        //     delete json.dno;
+        //     delete json.aca_session;
+
+        //     delete json.designation;
+        //     delete json.orgname;
+        //     delete json.start_year_month;
+        //     delete json.end_year_month;
+        //     delete json.isrunning;
+
+        //     delete json.special_qualification;
+
+        //     // upload_invitee_data({
+        //     //     spouse: json.spouse,
+        //     //     child: json.child,
+        //     //     guest: json.guest
+        //     // });
+
+        //     console.log(`json =>`, json);
+
+        //     // if (!confirm(`আপনি কি নিশ্চিত?`)) {
+        //     //     return;
+        //     // }
+
+        //     let promise = new Promise((resolve, reject) => {
+        //         let modal = $(`#form_submit_confirmation_modal`).modal("show");
+        //         // let degreeDepartment = json.education.filter(a => a.dno != 99).map(a => {
+        //         //     let dnoCheckbox = $(`[name="dno"][type="checkbox"][value="${a.dno}"]`);
+        //         //     let degree = dnoCheckbox.siblings(`label`).text();
+        //         //     let batchYear = dnoCheckbox.parents(`tr`).find(`select option:selected`).text();
+        //         //     if (a.dno <= 4) {
+        //         //         return `${degree} (Batch - ${batchYear})`;
+        //         //     } else {
+        //         //         return `${degree} (Year - ${batchYear})`;
+        //         //     }
+        //         // }).join(", ");
+
+        //         let professionalInformation = json.professions.length ?
+        //             json.professions
+        //             .map(a => `${a.profession ? a.profession : ``}${a.designation ? `, ${a.designation}` : ``}${a.orgname ? `, ${a.orgname}` : ``}`)
+        //             .join(", ") :
+        //             ``;
+
+        //         $(`.modal-body`, modal)
+        //             .html(`<div class="media mb-3">
+        //                     <img style='max-width: 40%;' src="${$(`#people_photo`).attr("src")}" class="align-self-start img-fluid shadow-sm rounded mr-3" width="160" height="160" alt="...">
+        //                     <div class="media-body">
+        //                         <h4 class="font-weight-bold text-primary">${json.name_en || `-`}</h4>
+        //                         <div><span class='text-primary'>Mobile:</span> ${phone || `-`}</div>
+        //                         <div><span class='text-primary'>Email:</span> ${json.email || `-`}</div>
+        //                         <div><span class='text-primary'>Blood Group:</span> ${$('[name="blood_group"] option:selected').val() || `-`}</div>
+        //                         <div><span class='text-primary'>NSU ID:</span> ${json.stdid || `-`}</div>
+        //                         <div><span class='text-primary'>Facebook ID:</span> ${json.facebookid || `-`}</div>
+        //                     </div>
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2">
+        //                     <span class='text-primary'>Your department:</span>
+        //                     ${$('[name="deptid"] option:selected').html() || `-`}
+        //                     ${json.deg_complete == 1
+        //                         ? `<span class='text-primary'>Pass year:</span> ${json.education[0].passyear}`
+        //                         : ` [${json.credit_transferred}]`
+        //                     }
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2">
+        //                     <span class='text-primary'>Are you interested to become a permanent member of AGAMIEVENT Chittagong?</span> ${Number(json.permanent_member_interest) == 1 ? `Yes` : `No`}
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2">
+        //                     <span class='text-primary'>Contact Address:</span> ${json.pr_address || `-`}
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2">
+        //                     <span class='text-primary'>Professional Information:</span> ${professionalInformation || `-`}
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2 ${json.self == 1?"":"d-none"}">
+        //                     <span class='text-primary'>T-Shirt Size:</span> ${json.tshirtsize || `-`}
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2">
+        //                     <span class='text-primary'>Total Participants:</span> ${json.self == 1 ? $(`#total_people`).text() : `01`}
+        //                 </div>
+        //                 <div class="font-weight-bold mb-2">
+        //                     <span class='text-primary'>Total Payable:</span> ${json.self == 1 ? $(`#total_amount`).text() : `৳ 800 /-`}
+        //                 </div>`);
+
+        //         $(`#form_submit_confirmation_button`).click(function(e) {
+        //             resolve(json);
+        //         });
+
+        //         modal.on(`hidden.bs.modal`, function(e) {
+        //             reject(``);
+        //         });
+        //     });
+
+        //     promise.then(
+        //         result => public_event_registration(result),
+        //         error => console.log(error)
+        //     );
+        // });
+
+        function public_event_registration(json) {
+            json = {
+                params: JSON.stringify(json),
+                action: "caa_register"
+            };
+
+            document.getElementsByClassName('loading_overlay')[0].style.display = 'block';
+
+            grecaptcha.ready(function() {
+                // do request for recaptcha token
+                // response is promise with passed token
+                grecaptcha.execute('6Lcw7jYkAAAAAJfAHygNY2qgYMPGspHkD-p-h9zW', {
+                    action: json.action
+                }).then(function(token) {
+                    // add token to form
+                    json.captchatoken = token;
+                    json.eventno = 1;
+
+                    $.post(`php/ui/public_event/public_event_registration.php`, json, resp => {
+                        if (resp.error) {
+                            toastr.error(resp.message);
+                        } else {
+                            toastr.success(resp.message);
+
+                            location.href = "registration_verification.php?phone=" + resp.phone;
+
+                            return;
+                            //
+                            // //get_personal_info();
+
+                            // $(`#response_modal`).modal("show");
+
+                            // $('#message_container').hide();
+                            // $('#payment_container').show();
+                            // let data = JSON.parse(json.params);
+                            // console.log(`data =>`, data);
+
+                            // $('#registrant_info')
+                            //     .html(`
+                            //         নাম: <b>${data.name_bn}</b><br/>
+                            //         মোবাইল নম্বর: <b>${data.phone}</b><br/>
+                            //         নিবন্ধন ফিঃ <b>${EN_NumberTo_BN(resp.total_amount || data.event.amount || 0)} + ১% বিকাশ চার্জ</b>
+                            //     `);
+
+                            // $('#registrant_photo').attr('src', data.photo_url);
+                            // $(`#pay_now_button`).data("eregno", resp.eregno);
+                            // $('#payment_notice').html(resp.message);
+                            // $('.pay_next').text('পেমেন্ট পরবর্তীতে করুন').prop('href', 'index.php');
+                        }
+
+                        document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+                    }, "json");
+                });
+            });
+        }
+
+        // $(document).on("input", `[name="isrunning"]`, function(e) {
+        //     if (this.checked) {
+        //         $(this).parents(`.row`).find(`[name="end_year_month"]`).val(``).prop("disabled", true);
+        //     } else {
+        //         $(this).parents(`.row`).find(`[name="end_year_month"]`).prop("disabled", false);
+        //     }
+        // });
+
+        $('#pay_now_button').click(function(e) {
+            e.preventDefault();
+            document.getElementsByClassName('loading_overlay')[0].style.display = 'block';
+
+            $(this).prop("disabled", true);
+
+            const paymentmethod = $(this).data('paymentmethod') || "bkash";
+            let eregno = $(this).data("eregno");
+
+            $.ajax({
+                url: "php/ui/payment/generate_paymentlink.php",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    pgw: paymentmethod,
+                    eregno,
+                    eventno: 2
+                },
+                success: (response) => {
+                    console.log(response);
+                    if (response.error) {
+                        toastr.error(response.message);
+                        document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+                    } else {
+                        document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+                        location.href = response.paymentlink;
+                    }
+
+                    setTimeout(() => {
+                        $(this).prop('disabled', false);
+                    }, 5000);
+
+                },
+                error: () => {
+                    // console.log(response);
+                    toastr.error("Unable to connect to Server. Please try again.");
+                    document.getElementsByClassName('loading_overlay')[0].style.display = 'none';
+
+                    setTimeout(() => {
+                        $(this).prop('disabled', false);
+                    }, 5000);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function getPhoneNumber() {
+            let phone = $('#event_application_form [name=phone]').val();
+
+
+            if (phone.length != 11) {
+                toastr.warning('১১ সংখ্যার মোবাইল নম্বর সঠিকভাবে দিন');
+                return false;
+            }
+
+            if (!phone.startsWith("01")) {
+                toastr.warning('১১ সংখ্যার মোবাইল নম্বর 01 দিয়ে শুরু হতে হবে সঠিকভাবে দিন');
+                return false;
+            }
+
+            return phone;
+        }
+
+        function setPhoneNumber(phone) {
+            if ($(`#event_application_form [name=phone]`).length) {
+                $(`#event_application_form [name=phone]`).val(phone);
+            }
+        }
+
+        $(`[name="phone"]`).on(`input`, function(e) {
+            if (this.value.length == 11) {
+                // get_personal_info();
+                return;
+            }
+        });
+
+        $('input.oninput_acaduration_next').keyup(function(e) {
+            e.preventDefault();
+
+            let inputVal = parseInt($(this).val());
+            // console.log(`inputVal =>`, inputVal, $(document).find(this).next('.oninput_acaduration_next'));
+
+
+            if (inputVal >= 0 && inputVal < 10) {
+                // console.log(` document oninput_acaduration_next=>`, $(document).find(this).next('.oninput_acaduration_next'));
+
+
+                // console.log(`$(document).find(this).next('.oninput_acaduration_next').length =>`, $(document).find(this).next('.oninput_acaduration_next').length);
+                // console.log(`$(document).find('.oninput_acaduration_next').nextAll(this)=>`, $(document).find('.oninput_acaduration_next').nextAll(this));
+
+                let check = parseInt($(document).find(this).next('.oninput_acaduration_next').length);
+
+                if (check) {
+                    $(document).find(this).next('.oninput_acaduration_next').trigger('focus');
+                } else if (check === 0) {
+
+                    let aca_period_from = $(this).closest('div').hasClass('aca_period_from');
+                    let aca_period_to = $(this).closest('div').hasClass('aca_period_to');
+                    if (aca_period_from) {
+                        $($(document).find('.aca_period_to .oninput_acaduration_next')[0]).trigger('focus');
+                    } else if (aca_period_to) {
+                        // $(this).select();
+                        // window.focus();
+                        $(this).trigger("focusout");
+
+                    } else {
+
+                    }
+                } else {
+                    $(this).select();
+                }
+            } else {
+                $(this).val('');
+            }
+        });
+
+        $('input.oninput_acaduration_next').focus(function() {
+            $(this).select();
+        });
+
+        $('input.oninput_acaduration_next').click(function(e) {
+            $(this).select();
+        });
+    </script>
+
+    <script>
+        $(`#is_alumni_yes_checkbox, #is_alumni_no_checkbox`).on("input", function(e) {
+            $(`#is_alumni_yes_checkbox, #is_alumni_no_checkbox`).not(this).prop("checked", false);
+
+            if (this.checked && $(this).attr(`id`) == `is_alumni_yes_checkbox`) {
+                // $(`.is_alumni_no_content`).collapse(`hide`);
+                // $(`.is_alumni_yes_content`).collapse(`show`);
+
+                $(`.is_alumni_no_content`).hide();
+                $(`.is_alumni_yes_content`).show();
+            } else if (this.checked && $(this).attr(`id`) == `is_alumni_no_checkbox`) {
+                // $(`.is_alumni_yes_content`).collapse(`hide`);
+                // $(`.is_alumni_no_content`).collapse(`show`);
+
+                $(`.is_alumni_yes_content`).hide();
+                $(`.is_alumni_no_content`).show();
+            } else {
+                // $(`.is_alumni_yes_content`).collapse(`hide`);
+                // $(`.is_alumni_no_content`).collapse(`hide`);
+
+                $(`.is_alumni_yes_content`).hide();
+                $(`.is_alumni_no_content`).hide();
+            }
+        });
+    </script>
+
+    <script>
+        $(`[name="deg_complete"]`).on(`input`, function(e) {
+            $(`[name="credit_transferred"]:checked`).prop(`checked`, false);
+            $(`[name="passyear"]`).val(``);
+
+            if (this.value == 1) {
+                $(`.credit_transferred_container`).hide();
+                $(`.pass_year_container`).show();
+            } else if (this.value == 0) {
+                $(`.pass_year_container`).hide();
+                $(`.credit_transferred_container`).show();
+            }
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
